@@ -130,7 +130,7 @@ module HttpTests =
     open Http
     open HttpType
     
-    let httpPostTest () =
+    let httpPostForm () =
 
         requestString "http://www.httpbin.org/post"
                       [
@@ -144,3 +144,14 @@ module HttpTests =
                           ]
 
        
+    let  httpPostJson () =
+        HttpReq.Http.requestString
+        <| "http://www.httpbin.org/post"
+        <| [
+            Method POST;
+            ContentType "application/json";
+            UserAgent   "Firefox Fake User Agent";
+            PostPayload "{\"name\": \"John\", \"id\": 2010, \"lang\" : \"es\" }" ;
+            ]
+
+    
