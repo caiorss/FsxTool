@@ -16,12 +16,16 @@ module HttpType =
         | PATCH 
 
     type HttpProp =
-        | Method           of HttpMethod 
-        | ContentType      of string
-        | UserAgent        of string
-        | PostParams       of (string * string) list
-        | PostPayload      of string
-        | PostPayloadBytes of byte [] 
+        | Method            of HttpMethod 
+        | ContentType       of string
+        | UserAgent         of string
+        | Headers           of (string * string) list 
+        | PostParams        of (string * string) list
+        | PostPayload       of string
+        | PostPayloadBytes  of byte []
+        | Timeout           of int
+        | KeepAlive         of bool
+        | Redirect          of bool 
 
 /// Module to perform http requests 
 ///     
@@ -72,7 +76,12 @@ module Http =
         let data = System.Text.Encoding.UTF8.GetBytes(payload) 
         dataStream.Write(data, 0, data.Length)
         dataStream.Close ()    
-        req         
+        req
+
+    let setHeaders headers (req: HttpWebRequest) =
+        List.iter (fun (k: string, v: string) -> req.Headers.[k] <- v)
+                  headers
+        req 
 
     let setPropSingle prop (req: HttpWebRequest) =
         match prop with
@@ -81,6 +90,10 @@ module Http =
         | UserAgent a   -> setUserAgent a req 
         | PostParams p  -> setPostParams p req
         | PostPayload p -> setPostPayload p req
+        | Headers h     -> setHeaders h req
+        | Timeout t     -> req.Timeout <- t; req 
+        | KeepAlive f   -> req.KeepAlive <- f; req
+        | Redirect f    -> req.AllowAutoRedirect <- f; req
         | _             -> req 
 
     let setProp propList (req: HttpWebRequest) =
@@ -145,10 +158,11 @@ module HttpTests =
 
        
     let  httpPostJson () =
-        HttpReq.Http.requestString
+        requestString
         <| "http://www.httpbin.org/post"
         <| [
             Method POST;
+            // Headers     [("Accept", "application/json")];
             ContentType "application/json";
             UserAgent   "Firefox Fake User Agent";
             PostPayload "{\"name\": \"John\", \"id\": 2010, \"lang\" : \"es\" }" ;
