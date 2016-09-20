@@ -16,10 +16,12 @@ module HttpType =
         | PATCH 
 
     type HttpProp =
-        | Method      of HttpMethod 
-        | ContentType of string
-        | UserAgent   of string
-        | PostParams  of (string * string) list 
+        | Method           of HttpMethod 
+        | ContentType      of string
+        | UserAgent        of string
+        | PostParams       of (string * string) list
+        | PostPayload      of string
+        | PostPayloadBytes of byte [] 
 
 /// Module to perform http requests 
 ///     
@@ -65,13 +67,21 @@ module Http =
         dataStream.Close ()    
         req 
 
+    let setPostPayload (payload: string) (req: HttpWebRequest) =
+        let dataStream = req.GetRequestStream ()
+        let data = System.Text.Encoding.UTF8.GetBytes(payload) 
+        dataStream.Write(data, 0, data.Length)
+        dataStream.Close ()    
+        req         
+
     let setPropSingle prop (req: HttpWebRequest) =
         match prop with
         | Method m      -> setHttpMethod m req
         | ContentType c -> setContentType c req
         | UserAgent a   -> setUserAgent a req 
-        | PostParams p  -> setPostParams p req 
-
+        | PostParams p  -> setPostParams p req
+        | PostPayload p -> setPostPayload p req
+        | _             -> req 
 
     let setProp propList (req: HttpWebRequest) =
         List.iter (fun p -> ignore <| setPropSingle p req) propList
@@ -112,6 +122,8 @@ module HttpUtils =
         let client = new WebClient ()
         client.DownloadFile (url, filename)
 
+
+
 /// Module that provides functions to test this library 
 ///         
 module HttpTests =
@@ -130,3 +142,5 @@ module HttpTests =
                                       ("key3", "value3")
                                       ]
                           ]
+
+       
