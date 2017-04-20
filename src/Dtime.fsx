@@ -1,4 +1,4 @@
-namespace FsxTool.Utils 
+namespace FsxTool.Dtime
 
 open System
 
