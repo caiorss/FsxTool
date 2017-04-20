@@ -66,6 +66,26 @@ let isWeekDay (d: DateTime) =
     | DayOfWeek.Sunday   -> false
     | _                  -> true 
 
+let isMonday (d: T) =
+    d.DayOfWeek = DayOfWeek.Monday
+
+let isTuesday (d: T) =
+    d.DayOfWeek = DayOfWeek.Tuesday
+
+let isWednesday (d: T) =
+    d.DayOfWeek = DayOfWeek.Wednesday
+
+let isThursday (d: T) =
+    d.DayOfWeek = DayOfWeek.Thursday
+
+let isFriday (d: T) =
+    d.DayOfWeek = DayOfWeek.Friday
+
+let isSaturday (d: T) =
+    d.DayOfWeek = DayOfWeek.Saturday
+
+let isSunday (d: T) =
+    d.DayOfWeek = DayOfWeek.Sunday
 
 let toIso8601Date (d: DateTime) =
      d.ToString("yyyy-MM-dd")
