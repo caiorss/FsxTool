@@ -44,9 +44,9 @@ let curDay () =
 
 let today () = DateTime.Today
 
-let nextDay () = DateTime.Today.AddDays(1.0)
+let nextDay (dt: T) = dt.AddDays(1.0)
 
-let prevDay () = DateTime.Today.AddDays(-1.0)
+let prevDay (dt: T) = dt.AddDays(-1.0)
 
 let nextDate d =
     addDays d 1.0 
