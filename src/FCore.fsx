@@ -6,16 +6,20 @@
 ///
 module Option =
 
+    module Op =
+        let (>>=) ma fn = Option.bind fn ma
+        let (>=+) ma fn = Option.map fn ma 
+
     let map2 fn ma mb =
         match ma, mb with
         | Some a, Some b -> Some (fn a b)
         | _              -> None
 
 
-    let value default' t =
+    let value defaultVal t =
        match t with
        | Some x -> x
-       | None   -> default'
+       | None   -> defaultVal
 
     let both o1 o2  =
        match o1, o2 with

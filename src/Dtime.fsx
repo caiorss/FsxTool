@@ -1,8 +1,14 @@
+module Dtime
+
 open System
 
+type T = DateTime
+
+/// Create DateTime object 
 let date y m d = new DateTime (y, m, d)
 
-let datet y m d = new DateTime(y, m, d)
+/// Create DateTime object from date Year, Month, Day tuple
+let datet (y, m, d) = new DateTime(y, m, d)
 
 /// <summary>
 ///  Used to create sequence of dates that happens in same day of month
@@ -10,6 +16,7 @@ let datet y m d = new DateTime(y, m, d)
 ///
 let dateFixDay y d =
     fun m -> date y m d 
+
 
 let toTuple (d: DateTime) =
     (d.Year, d.Month, d.Day)
@@ -33,12 +40,15 @@ let addDays (d: DateTime) ndays =
 let diff (d1: DateTime) (d2: DateTime) =
     (d1 - d2).Days
 
+/// Get current year 
 let curYear () =
     DateTime.Today.Year
 
+/// Get current month 
 let curMonth () =
     DateTime.Today.Month 
 
+/// Get current day 
 let curDay () =
     DateTime.Today.Day 
 
@@ -97,6 +107,10 @@ let rec dateFind (date: DateTime) pred iterator =
     | false ->  dateFind (iterator date) pred iterator 
 
 
+module Instant =
+    let now () = DateTime.Now
+    
+    
 
 
 // let d = date (2012, 1, 20)
