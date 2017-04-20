@@ -111,6 +111,14 @@ module Dtime =
         | true  ->  date
         | false ->  dateFind (iterator date) pred iterator 
 
+    let unixZeroDate =
+        DateTime(1970, 1, 1).ToUniversalTime()
+
+
+    let toUnixTimestamp (dt: T) =
+        let x = dt.ToUniversalTime() - unixZeroDate
+        x.TotalSeconds
+
 
     module Instant =
         let now () = DateTime.Now
