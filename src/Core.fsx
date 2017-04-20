@@ -1,6 +1,5 @@
+namespace FsxTool.Core
 /// Useful extension methods
-
-
 
 /// Option extension module
 ///
