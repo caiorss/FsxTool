@@ -1,5 +1,5 @@
 
-src    := src/FCore.fsx src/Dtime.fsx
+src    := src/Core.fsx src/Dtime.fsx src/HUnit.fsx src/HttpReq.fsx
 target := FsxTool.dll
 xml    := FsxTool.xml
 
