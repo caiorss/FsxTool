@@ -1,4 +1,4 @@
-module HttpReq
+namespace FsxTool.HttpReq
 
 open System 
 open System.Net
