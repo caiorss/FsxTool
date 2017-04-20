@@ -35,6 +35,29 @@ module Dtime =
     let year (d: DateTime) =
         d.Year
 
+    /// Parse date in no safe format, throws
+    /// exception if date is not valid.
+    let parse2 format str =
+        DateTime.ParseExact(str,
+                            format,
+                            null
+                            )
+
+    let parse format str =
+        try
+            Some <| DateTime.ParseExact(str,
+                                        format,
+                                        null)
+        with
+            :? System.FormatException -> None
+
+    /// Read date in yyyy-mm-dd format
+    let read str = parse "yyyy-mm-dd" str
+
+    /// Read date in yyyy-mm-dd format, not safe.
+    let read2 str =
+        Option.get <| parse "yyyy-mm-dd" str
+
     let dayOfWeek (d: DateTime) =
         d.DayOfWeek
 
