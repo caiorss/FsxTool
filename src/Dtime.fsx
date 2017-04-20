@@ -61,7 +61,7 @@ module Dtime =
     let dayOfWeek (d: DateTime) =
         d.DayOfWeek
 
-    let addDays (d: DateTime) ndays =
+    let addDays ndays (d: DateTime) =
         d.AddDays(ndays)
 
 
@@ -87,10 +87,10 @@ module Dtime =
     let prevDay (dt: T) = dt.AddDays(-1.0)
 
     let nextDate d =
-        addDays d 1.0 
+        addDays 1.0 d
 
     let prevDate d =
-        addDays d (-1.0)    
+        addDays (-1.0) d
 
     let isWeekend (d: DateTime) =
         match d.DayOfWeek with
