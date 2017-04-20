@@ -119,6 +119,11 @@ module Dtime =
         let x = dt.ToUniversalTime() - unixZeroDate
         x.TotalSeconds
 
+    let fromUnixTimestamp tstamp =
+        unixZeroDate.AddSeconds(tstamp)
+
+
+
 
     module Instant =
         let now () = DateTime.Now
