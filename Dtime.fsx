@@ -1,6 +1,6 @@
 open System
 
-let date (y, m, d) = new DateTime (y, m, d)
+let date y m d = new DateTime (y, m, d)
 
 let datet y m d = new DateTime(y, m, d)
 
@@ -9,7 +9,7 @@ let datet y m d = new DateTime(y, m, d)
 /// </summary>
 ///
 let dateFixDay y d =
-    fun m -> date (y, m, d)
+    fun m -> date y m d 
 
 let toTuple (d: DateTime) =
     (d.Year, d.Month, d.Day)
@@ -67,9 +67,6 @@ let isWeekDay (d: DateTime) =
     | _                  -> true 
 
 
-
-
-
 let toIso8601Date (d: DateTime) =
      d.ToString("yyyy-MM-dd")
 
@@ -80,7 +77,7 @@ let rec dateFind (date: DateTime) pred iterator =
     | false ->  dateFind (iterator date) pred iterator 
 
 
-dateFind 
+
 
 // let d = date (2012, 1, 20)
 
