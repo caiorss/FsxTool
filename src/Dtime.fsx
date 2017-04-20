@@ -19,6 +19,9 @@ module Dtime =
     let dateFixDay y d =
         fun m -> date y m d 
 
+    let lengthOfMonth y m =
+        DateTime.DaysInMonth(y, m)
+
 
     let toTuple (d: DateTime) =
         (d.Year, d.Month, d.Day)
