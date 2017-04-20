@@ -36,3 +36,39 @@ Data;Taxa (%a.a.);Fator di�rio;Base de c�lculo (R$);M�dia;Mediana;Moda;Des
 06/11/2012;7,14;1,00027371;271.429.838.596,18;7,14;7,14;7,14;0,02;653,42;
   ...
 "  
+
+//------------------------------------- 
+// Send Json data
+//   
+let data = HttpReq.Http.requestString
+           <| "http://www.httpbin.org/post"
+           <| [
+               Method POST;
+               ContentType "application/json";
+               UserAgent   "Firefox Fake User Agent";
+               PostPayload "{\"name\": \"John\", \"id\": 2010, \"lang\" : \"es\" }" ;
+               ]
+;;
+
+> data ;;
+val it : string =
+  "{
+  "args": {}, 
+  "data": "{\"name\": \"John\", \"id\": 2010, \"lang\" : \"es\" }", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Content-Length": "44", 
+    "Content-Type": "application/json", 
+    "Host": "www.httpbin.org", 
+    "User-Agent": "Firefox Fake User Agent"
+  }, 
+  "json": {
+    "id": 2010, 
+    "lang": "es", 
+    "name": "John"
+  }, 
+  "origin": "179.180.152.240", 
+  "url": "http://www.httpbin.org/post"
+}
+"

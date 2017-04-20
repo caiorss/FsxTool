@@ -37,14 +37,46 @@ let sleep = async {
 
 
 
+module Async =
+    
+    let toAsync fn x =
+        async {
+            let y = fn x
+            return y 
+        }
 
-let toAsync fn x =
-    async {
-        let y = fn x
-        return y 
+    let iter f action =
+        async {
+            let! res = action
+            f res
     }
-  
+    
+    let map f action =
+        async{
+            let! res = action
+            return (f res)
+        }
 
+    let bind action f  =
+        async {
+            let!    a  = action
+            let!    b  = f a
+            return  b 
+        }
+
+    let mapJoin (f: 'a -> Async<'b>) (xs: 'a seq) =
+        xs
+        |> Seq.map f
+        |> Async.Parallel
+        |> Async.RunSynchronously
+        
+
+let compAsync fasyn fn =
+    fun  x ->
+        async {
+            let! res = fasyn (fn x)
+            return res 
+            }
 
 let result = client.BeginConnect("192.168.1.27", 8080, null, null)
 // let status = result.AsyncWaitHandle.WaitOne(500)
@@ -100,11 +132,11 @@ module NetTools =
 
     let pingShowNetwork baseAddress  =
         pingAllNetwork baseAddress
-        |> Array.iter (fun host -> printfn "Host %s up" host)
+        |> Seq.iter (fun host -> printfn "Host %s up" host)
 
     /// Function to test if TCP connection is opened. 
     ///
-    let checkTCPPortStatus (timeoutMs: int) (host: string) (port: int) =
+    let tcpPortStatus (timeoutMs: int) (host: string) (port: int) =
         let client = new System.Net.Sockets.TcpClient ()
 
         try
@@ -115,6 +147,59 @@ module NetTools =
             :? System.AggregateException -> client.Close();
                                             false
 
+    let tcpPortStatusAsync (timeout: int) (host: string) (port: int) =
+        async {
+            let    status = tcpPortStatus timeout host port
+            return status 
+        }
+
+
+
+
+[1000..60000]
+|> List.map (fun port -> async {
+                                let status = NetTools.tcpPortStatus 500 "192.168.1.3" port
+                                if status
+                                then printfn "Port %d opened" port
+                                })
+|> Async.Parallel
+|> Async.Ignore
+|> Async.RunSynchronously
+
+NetTools.pingShowNetwork "192.168.1." ;;
+Host 192.168.1.1 up
+Host 192.168.1.3 up
+Host 192.168.1.5 up
+Host 192.168.1.7 up
+Host 192.168.1.27 up
+val it : unit = ()
+> 
+
+let portList2 = portList |> List.takeWhile (fun (_, port) -> port < 30)
+
+portList
+|> List.map (fun (name, port) -> async {
+                                        let status = NetTools.tcpPortStatus 1000 "192.168.1.27" port
+                                        return (name, port, status)
+                                })
+|> Async.Parallel
+|> Async.RunSynchronously
+|> Array.iter (fun (name, port, status) ->
+              if status
+              then printfn "Port %s %d opened" name port
+              )
+                                      
+                                 
+                                 
+
+
+                                 
+let lines = System.IO.File.ReadLines "tcp-ports.txt"
+
+for port in [1..1000] do
+    if NetTools.tcpPortStatus 500 "192.168.1.3" port
+    then printfn "TCP Port %d opened" port
+    
 
 
 let protStatus2 (hostname: string) port (timeout: int) =

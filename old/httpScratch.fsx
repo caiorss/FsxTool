@@ -1,3 +1,7 @@
+open System 
+open System.Net
+open System.Web 
+
 let req = WebRequest.Create("http://www.httpbin.org/post") :?> HttpWebRequest
 
 
@@ -36,3 +40,17 @@ let reader = new System.IO.StreamReader (respStream)
 let output = reader.ReadToEnd()
 respStream.Close()
 reader.Close ()
+
+
+
+let req = WebRequest.Create("http://www.httpbin.org/post") :?> HttpWebRequest
+req.ContentType <- "application/octet-stream"
+req.Method <- "POST"
+req.AllowAutoRedirect <- true
+req.Timeout <- 2000
+req.KeepAlive <- true 
+let rs = req.GetRequestStream()
+
+let header = ""
+let header = System.Text.Encoding.UTF8.GetBytes(header)
+rs.
