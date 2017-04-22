@@ -7,7 +7,7 @@ open System.Web
 
 /// Http Requst user types
 ///
-module HttpType =
+module HttpTypes =
     
     type HttpMethod =
         | GET 
@@ -33,9 +33,9 @@ module HttpType =
 ///     
 module Http =
 
-    open HttpType 
+    open HttpTypes 
     
-    let encodePostParameters parameters =
+    let private encodePostParameters parameters =
 
         let data = List.fold (fun acc (key: string, value: string) ->
                               HttpUtility.UrlEncode(key)
@@ -143,7 +143,7 @@ module HttpUtils =
 ///         
 module HttpTests =
     open Http
-    open HttpType
+    open HttpTypes
     
     let httpPostForm () =
 
