@@ -1,4 +1,4 @@
-namespace FsxTool.Xml
+module FXml
 
 open System
 open System.Xml 
