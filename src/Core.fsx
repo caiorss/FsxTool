@@ -105,6 +105,9 @@ module String  =
     open System
     open System.Text.RegularExpressions
 
+    let join prefix (strlist: string seq) =
+        String.Join(prefix, strlist)
+
     let splitByWords (words: string []) (str: string) =
         str.Split(words, StringSplitOptions.RemoveEmptyEntries)
     
