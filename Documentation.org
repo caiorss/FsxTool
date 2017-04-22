@@ -1,0 +1,208 @@
+* Documentation
+** Overview 
+
+Package Namespaces 
+
+ - FsxtTool.Core
+   - F# extension module
+
+ - FsxTool.Dtime
+   - Date and Time manipulation combinators.
+
+ - FsxTool.HttpReq
+   - Http Request combinators
+
+** FsxTool.Core
+*** String
+**** join
+
+Join strings by a common prefix;
+
+#+BEGIN_SRC fsharp
+- String.join ;;
+val it : (string -> seq<string> -> string)
+>
+- String.join "-" ["hello"; "world"; "fsharp"; "rocks"] ;;
+val it : string = "hello-world-fsharp-rocks"
+>
+- ["hello"; "world"; "fsharp"; "rocks"] |> String.join "-" ;;
+val it : string = "hello-world-fsharp-rocks"
+>
+#+END_SRC
+
+**** splitByLines
+
+Split string by lines
+
+#+BEGIN_SRC fsharp
+- String.splitLines ;;
+val it : (string -> string [])
+>
+- String.splitLines "hello\nworld\nfsharp haskell\nunix" ;;
+val it : string [] = [|"hello"; "world"; "fsharp haskell"; "unix"|]
+>
+#+END_SRC
+
+**** addPrefix
+
+Add prefix to string
+
+#+BEGIN_SRC fsharp
+- String.addPrefix ;;
+val it : (string -> string -> string)
+>
+- String.addPrefix "prefix" "-hello" ;;
+val it : string = "prefix-hello"
+>
+- ["hello"; "world"; "fsharp"; "csharp"] |> List.map (String.addPrefix "pref-") - ;;
+val it : string list =
+  ["pref-hello"; "pref-world"; "pref-fsharp"; "pref-csharp"]
+>
+
+#+END_SRC
+
+**** addSuffix
+
+Add suffix to string.
+
+#+BEGIN_SRC fsharp
+- String.addSuffix "-suf" "a string" ;;
+val it : string = "a string-suf"
+>
+- ["hello"; "world"; "fsharp"; "csharp"] |> List.map (String.addSuffix "-suf") ;- ;
+val it : string list = ["hello-suf"; "world-suf"; "fsharp-suf"; "csharp-suf"]
+>
+
+#+END_SRC
+*** Option 
+**** Overview 
+
+Option module extension. Provides additional Option combinators.
+**** map2
+**** value 
+
+- =value defaultVal t=
+
+Example: 
+
+#+BEGIN_SRC fsharp
+- Option.value ;;
+val it : ('a -> 'a option -> 'a)
+> 
+- Option.value 10 (Some 100) ;;
+val it : int = 100
+> Option.value 10 None ;;      
+val it : int = 10
+> 
+#+END_SRC
+
+**** TODO both 
+
+#+BEGIN_SRC fsharp 
+- Option.both ;;
+val it : ('a option -> 'b option -> ('a * 'b) option)
+
+
+#+END_SRC
+
+**** TODO filter 
+**** forp 
+
+ - =Option.forp: consumer handler ma=
+   - consumer: 'a -> unit
+     - Function to be invoked if option value is not None.
+   - handler : unit -> unit
+     - Function to be invoked if option value ma is None.
+   - ma      : 'a option
+     - Option value.
+
+#+BEGIN_SRC fsharp
+- Option.forp ;;          
+val it : (('a -> unit) -> (unit -> unit) -> 'a option -> unit) =
+
+- Option.forp (printfn "Value is equal to %A") (fun () -> printfn "Failed") (Some 100) ;;
+Value is equal to 100
+val it : unit = ()
+> 
+- Option.forp (printfn "Value is equal to %A") (fun () -> printfn "Failed") None ;;      
+Failed
+val it : unit = ()
+> 
+
+#+END_SRC
+** FsxTool.Dtime 
+*** Overview 
+
+Time manipulation library.
+
+*** Module Date 
+
+| Function       | Singature                                             | Description                                   |
+|----------------+-------------------------------------------------------+-----------------------------------------------|
+| *Constructors* |                                                       |                                               |
+| today          | unit -> System.DateTime                               | Get current date in local time.               |
+| date           | y:int -> m:int -> d:int -> System.DateTime            | Create new datetime object.                   |
+| datet          | y:int * m:int * d:int -> System.DateTime              | Create new datettime object from tuple.       |
+|                |                                                       |                                               |
+| *Extractors*   |                                                       |                                               |
+| day            | d:System.DateTime -> int                              | Get date day                                  |
+| month          | d:System.DateTime -> int                              | Get date month                                |
+| year           | d:System.DateTime -> int                              | Get date yar.                                 |
+|                |                                                       |                                               |
+|                |                                                       |                                               |
+| *Parsers*      |                                                       |                                               |
+| parse          | format:string -> str:string -> System.DateTime option | Try parse date. Return None if it fails.      |
+| parrse2        | format:string -> str:string -> System.DateTime        | Try parse data. Throws exception if it fails. |
+|                |                                                       |                                               |
+
+Singaures: 
+
+#+BEGIN_SRC fsharp
+module Date = begin
+  type T = System.DateTime
+  val date : y:int -> m:int -> d:int -> System.DateTime
+  val datet : y:int * m:int * d:int -> System.DateTime
+  val dateFixDay : y:int -> d:int -> m:int -> System.DateTime
+  val lengthOfMonth : y:int -> m:int -> int
+  val toTuple : d:System.DateTime -> int * int * int
+  val day : d:System.DateTime -> int
+  val month : d:System.DateTime -> int
+  val year : d:System.DateTime -> int
+  val parse2 : format:string -> str:string -> System.DateTime
+  val parse : format:string -> str:string -> System.DateTime option
+  val read : str:string -> System.DateTime option
+  val read2 : str:string -> System.DateTime
+  val dayOfWeek : d:System.DateTime -> System.DayOfWeek
+  val addDays : ndays:float -> d:System.DateTime -> System.DateTime
+  val diff : d1:System.DateTime -> d2:System.DateTime -> int
+  val curYear : unit -> int
+  val curMonth : unit -> int
+  val curDay : unit -> int
+  val today : unit -> System.DateTime
+  val nextDay : dt:T -> System.DateTime
+  val prevDay : dt:T -> System.DateTime
+  val nextDate : d:System.DateTime -> System.DateTime
+  val prevDate : d:System.DateTime -> System.DateTime
+  val isWeekend : d:System.DateTime -> bool
+  val isWeekDay : d:System.DateTime -> bool
+  val isMonday : d:T -> bool
+  val isTuesday : d:T -> bool
+  val isWednesday : d:T -> bool
+  val isThursday : d:T -> bool
+  val isFriday : d:T -> bool
+  val isSaturday : d:T -> bool
+  val isSunday : d:T -> bool
+  val toIso8601Date : d:System.DateTime -> string
+  val dateFind :
+    date:System.DateTime ->
+      pred:(System.DateTime -> bool) ->
+        iterator:(System.DateTime -> System.DateTime) -> System.DateTime
+  val unixZeroDate : System.DateTime = 1/1/1970 3:00:00 AM
+  val toUnixTimestamp : dt:T -> float
+  val fromUnixTimestamp : tstamp:float -> System.DateTime
+end
+module Instant = begin
+  val now : unit -> System.DateTime
+end
+
+#+END_SRC
