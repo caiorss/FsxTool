@@ -100,3 +100,50 @@ module Result =
         | Ok g         -> g x
         | Error _      -> ()
 
+
+module String  =
+    open System
+    open System.Text.RegularExpressions
+
+    let splitByWords (words: string []) (str: string) =
+        str.Split(words, StringSplitOptions.RemoveEmptyEntries)
+    
+    let splitByChars (chrs: char []) (str: string) =
+        str.Split(chrs,  StringSplitOptions.RemoveEmptyEntries)
+
+    let splitByChar (ch: char) (str: string) =
+        splitByChars [|ch|] str
+
+    let splitLines (str: string) =
+        splitByChars [| '\n'; '\r' |] str
+
+
+    let splitSpace (str: string) =
+        splitByChars [| ' '; '\t' |] str
+
+    /// Add suffix to string 
+    let addPrefix (prefix: string) (str: string) =
+        prefix + str
+
+    /// Add suffix to string     
+    let addSuffix (suffix: string) (str: string) =
+        str + suffix
+
+    /// Get regex matches 
+    let reMatches expr (text: string) =
+        Regex.Matches(text, expr)
+
+    /// Replace regex pattern in string
+    ///
+    /// - expr - Regex expression
+    /// - rep  - Replacement
+    /// - text - Input text
+    ///
+    let reReplace expr rep (text: string) =
+        let rgx = new Regex(expr)
+        rgx.Replace(text, rep)
+
+    
+        
+    // let split ch (str: string) =   
+    
