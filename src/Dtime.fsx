@@ -2,7 +2,7 @@ namespace FsxTool.Dtime
 
 open System
 
-module Dtime = 
+module Date =
 
     type T = DateTime
 
