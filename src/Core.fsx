@@ -142,7 +142,7 @@ module String  =
     /// - rep  - Replacement
     /// - text - Input text
     ///
-    let reReplace expr rep (text: string) =
+    let reReplace (expr: string) (rep: string) (text: string) =
         let rgx = new Regex(expr)
         rgx.Replace(text, rep)
 
