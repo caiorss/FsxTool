@@ -12,7 +12,7 @@ Package Namespaces
  - FsxTool.HttpReq
    - Http Request combinators
 
-** FsxTool.Core
+** FsxTool.Core - Extension modules for Option, String ... 
 *** String
 **** join
 
@@ -130,30 +130,53 @@ val it : unit = ()
 > 
 
 #+END_SRC
-** FsxTool.Dtime 
+** FsxTool.Dtime - Date-Time manipulation
 *** Overview 
 
 Time manipulation library.
 
 *** Module Date 
 
-| Function       | Singature                                             | Description                                   |
-|----------------+-------------------------------------------------------+-----------------------------------------------|
-| *Constructors* |                                                       |                                               |
-| today          | unit -> System.DateTime                               | Get current date in local time.               |
-| date           | y:int -> m:int -> d:int -> System.DateTime            | Create new datetime object.                   |
-| datet          | y:int * m:int * d:int -> System.DateTime              | Create new datettime object from tuple.       |
-|                |                                                       |                                               |
-| *Extractors*   |                                                       |                                               |
-| day            | d:System.DateTime -> int                              | Get date day                                  |
-| month          | d:System.DateTime -> int                              | Get date month                                |
-| year           | d:System.DateTime -> int                              | Get date yar.                                 |
-|                |                                                       |                                               |
-|                |                                                       |                                               |
-| *Parsers*      |                                                       |                                               |
-| parse          | format:string -> str:string -> System.DateTime option | Try parse date. Return None if it fails.      |
-| parrse2        | format:string -> str:string -> System.DateTime        | Try parse data. Throws exception if it fails. |
-|                |                                                       |                                               |
+| Function       | Singature                               | Description                                         |
+|----------------+-----------------------------------------+-----------------------------------------------------|
+| *Type*         |                                         |                                                     |
+| T              | System.DateTime                         |                                                     |
+|                |                                         |                                                     |
+| *Constructors* |                                         |                                                     |
+| today          | unit -> T                               | Get current date in local time.                     |
+| date           | y:int -> m:int -> d:int -> T            | Create new datetime object.                         |
+| datet          | y:int * m:int * d:int -> T              | Create new datettime object from tuple.             |
+| curDay         | unit -> int                             | Get current day.                                    |
+| curMonth       | unit -> init                            | Get current month.                                  |
+| curYear        | unit -> int                             | Get current year.                                   |
+|                |                                         |                                                     |
+| *Extractors*   |                                         |                                                     |
+| day            | d:T -> int                              | Get date day                                        |
+| month          | d:T -> int                              | Get date month                                      |
+| year           | d:T -> int                              | Get date yar.                                       |
+| dayOfWeek      | d:T -> System.DayOfWeek                 | Get day of week                                     |
+|                |                                         |                                                     |
+| *Operators*    |                                         |                                                     |
+| addDays        | ndays:float -> d:T -> T                 | Add n days to date.                                 |
+| nextDay        | dt:T -> T                               | Increment date by one day.                          |
+| prevDay        | dt:T -> T                               | Decrement date by one day.                          |
+| diff           | d1:T -> d2:T -> T                       | Get the difference between date d1 and d2 (d1 - d2) |
+|                |                                         |                                                     |
+| *Predicates*   |                                         |                                                     |
+| isWeekend      | d:T -> bool                             |                                                     |
+| isWeekDay      | d:T -> bool                             |                                                     |
+| isMonday       | d:T -> bool                             |                                                     |
+| isTuesday      | d:T -> bool                             |                                                     |
+| isWednesday    | d:T -> bool                             |                                                     |
+| isThursday     | d:T -> bool                             |                                                     |
+| isFriday       | d:T -> bool                             |                                                     |
+| isSaturday     | d:T -> bool                             |                                                     |
+| isSunday       | d:T -> bool                             |                                                     |
+|                |                                         |                                                     |
+| *Parsers*      |                                         |                                                     |
+| parse          | format:string -> str:string -> T option | Try parse date. Return None if it fails.            |
+| parrse2        | format:string -> str:string -> T        | Try parse data. Throws exception if it fails.       |
+|                |                                         |                                                     |
 
 Singaures: 
 
@@ -206,3 +229,5 @@ module Instant = begin
 end
 
 #+END_SRC
+** TODO FsxTool.HttpReq - Http Client Library 
+
