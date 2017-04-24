@@ -57,7 +57,7 @@ module Node =
         | attrs -> seq { for n in attrs  do yield n.Name }
 
     /// Get child nodes from a xml node
-    let cnodes (node: T) =
+    let childNodes (node: T) =
         seq {for n in node.ChildNodes do yield n }
 
     /// Get all child nodes ignoring comment nodes
@@ -79,17 +79,17 @@ module Node =
              |> Seq.map (attrv2 attr)
 
     let nodesAttrs attrlist (node: T) =
-        node |> cnodesNoComment
+        node |> childNodesNoComment
              |> Seq.map (fun node -> List.map (fun attr -> attrv2 attr node) attrlist)
 
     /// Find a child node that satisfies a predicate
     let findNode fn (node: T) =
-        node |> cnodes
+        node |> childNodes
              |> Seq.tryFind fn
 
     /// Filter child nodes of a node that satisfies a predicate
     let filterNodes fn (node: T) =
-        node |> cnodes
+        node |> childNodes
              |> Seq.filter fn 
 
     /// Find child node that has a given tag
@@ -103,7 +103,7 @@ module Node =
 
     /// Try to find a child node which has a given tag and returns its text
     let getTagText tag (node: T) =
-        node |> cnodes
+        node |> childNodes
              |> Seq.tryFind (fun node -> node.Name = tag)
              |> Option.map (fun node -> node.InnerText)
 
@@ -142,7 +142,7 @@ module Node =
     /// Check if at least one child node has tag or name
     /// <tag attr1="v1" attr2="v2" ...>
     let nodeChildHasTag tag (node: T) =
-        node |> cnodes
+        node |> childNodes
              |> Seq.exists (fun n -> n.Name = tag)
 
     /// Check if node type is not comment node 
