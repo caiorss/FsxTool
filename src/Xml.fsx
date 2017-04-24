@@ -8,6 +8,10 @@ module Node =
 
     type T = XmlNode 
 
+
+    let xmlNodeListToSeq (xs: XmlNodeList) =
+        seq {for n in xs do yield n}
+
     /// Get XML node value 
     let value (node: T) =
         node.Value
