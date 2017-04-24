@@ -137,37 +137,3 @@ module HttpUtils =
         let client = new WebClient ()
         client.DownloadFile (url, filename)
 
-
-
-/// Module that provides functions to test this library 
-///         
-module HttpTests =
-    open Http
-    open HttpTypes
-    
-    let httpPostForm () =
-
-        requestString "http://www.httpbin.org/post"
-                      [
-                          Method POST;
-                          ContentType "application/x-www-form-urlencoded";
-                          UserAgent "Firefox" ;
-                          PostParams [("key1", "value1");
-                                      ("key2", "value2");
-                                      ("key3", "value3")
-                                      ]
-                          ]
-
-       
-    let  httpPostJson () =
-        requestString
-        <| "http://www.httpbin.org/post"
-        <| [
-            Method POST;
-            // Headers     [("Accept", "application/json")];
-            ContentType "application/json";
-            UserAgent   "Firefox Fake User Agent";
-            PostPayload "{\"name\": \"John\", \"id\": 2010, \"lang\" : \"es\" }" ;
-            ]
-
-    
