@@ -320,15 +320,15 @@ module TInfo =
     let getMethodsFlags flags (t: T) = t.GetMethods(flags)
 
     let queryXmlComment (query: string) (doc: XmlDocument): XmlNode option =
-        doc |> FXml.Doc.root
-            |> FXml.Node.nth 1
-            |> FXml.Node.findNode (FXml.Node.nodeAttrTagContains "member" "name" query)
+        doc |> FsxTool.Xml.Doc.root
+            |> FsxTool.Xml.Node.nth 1
+            |> FsxTool.Xml.Node.findNode (FsxTool.Xml.Node.nodeAttrTagContains "member" "name" query)
 
     let queryXmlSummary (query: string) (doc: XmlDocument): string option =
-        doc  |> FXml.Doc.root
-             |> FXml.Node.nth 1
-             |> FXml.Node.findNode (FXml.Node.nodeAttrTagContains "member" "name" query)
-             |> Option.bind (FXml.Node.findTextFromNodeTag "summary")
+        doc  |> FsxTool.Xml.Doc.root
+             |> FsxTool.Xml.Node.nth 1
+             |> FsxTool.Xml.Node.findNode (FsxTool.Xml.Node.nodeAttrTagContains "member" "name" query)
+             |> Option.bind (FsxTool.Xml.Node.findTextFromNodeTag "summary")
              |> Option.map (fun text -> text.Trim())
 
 
@@ -733,7 +733,7 @@ module AsmDisplay =
     let showType (asmFile: string) (typeName: string) =
         let xmlFile = System.IO.Path.ChangeExtension(asmFile, "xml")
         let doc = if System.IO.File.Exists xmlFile
-                  then Some (FXml.Doc.loadUri xmlFile)
+                  then Some (FsxTool.Xml.Doc.loadUri xmlFile)
                   else None
 
         AsmAttr.loadCont asmFile (AsmAttr.findType typeName
@@ -828,7 +828,7 @@ module AsmDisplay =
         let aux asm =
             let xmlFile = System.IO.Path.ChangeExtension(asmFile, "xml")
             let doc = if System.IO.File.Exists xmlFile
-                      then Some (FXml.Doc.loadUri xmlFile)
+                      then Some (FsxTool.Xml.Doc.loadUri xmlFile)
                       else None
 
             asm   |> AsmAttr.getExportedNS
