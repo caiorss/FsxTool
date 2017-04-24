@@ -328,7 +328,7 @@ module TInfo =
         doc  |> FsxTool.Xml.Doc.root
              |> FsxTool.Xml.Node.nth 1
              |> FsxTool.Xml.Node.findNode (FsxTool.Xml.Node.nodeAttrTagContains "member" "name" query)
-             |> Option.bind (FsxTool.Xml.Node.findTextFromNodeTag "summary")
+             |> Option.bind (FsxTool.Xml.Node.getTagText "summary")
              |> Option.map (fun text -> text.Trim())
 
 
