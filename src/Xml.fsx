@@ -96,6 +96,11 @@ module Node =
     let findNodeTag tag (node: T) =
         findNode (fun node -> node.Name = tag) node
 
+    /// Find child node that has a given tag (Not safe)
+    let findNodeTag2 tag (node: T) =
+        node |> findNode (fun node -> node.Name = tag)
+             |> Option.get
+
     /// Try to find a child node which has a given tag and returns its text
     let findTextFromNodeTag tag (node: T) =
         node |> cnodes
