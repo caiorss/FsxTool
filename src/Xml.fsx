@@ -12,6 +12,9 @@ module Node =
     let xmlNodeListToSeq (xs: XmlNodeList) =
         seq {for n in xs do yield n}
 
+    let nodeToElement (node: T) =
+        node :?> XmlElement
+
     /// Get XML node value 
     let value (node: T) =
         node.Value
