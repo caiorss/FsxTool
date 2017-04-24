@@ -163,8 +163,8 @@ Time manipulation library.
 | diff           | d1:T -> d2:T -> T                       | Get the difference between date d1 and d2 (d1 - d2) |
 |                |                                         |                                                     |
 | *Predicates*   |                                         |                                                     |
-| isWeekend      | d:T -> bool                             |                                                     |
-| isWeekDay      | d:T -> bool                             |                                                     |
+| isWeekend      | d:T -> bool                             | Test if date is Saturday or Sunday.                 |
+| isWeekDay      | d:T -> bool                             | Test if ate is not Saturday or Sunday.              |
 | isMonday       | d:T -> bool                             |                                                     |
 | isTuesday      | d:T -> bool                             |                                                     |
 | isWednesday    | d:T -> bool                             |                                                     |
@@ -229,5 +229,540 @@ module Instant = begin
 end
 
 #+END_SRC
+** FsxTool.xml - Xml Parsing Combinators 
+*** Functions 
+
+Module Doc:
+
+| Function | Signature       |                                         |
+|----------+-----------------+-----------------------------------------|
+| Type T   | XmlDocument     |                                         |
+|          |                 |                                         |
+| load     | string -> T     | Get Xml document from string.           |
+| loadUri  | string -> T     | Get Xml document from URI, file or URL. |
+|          |                 |                                         |
+| root     | T -> XmlElement | Get Xml root element from XmlDocument.  |
+| toString | T -> string     | Print XmlDocument to string.            |
+| show     | T -> unit       | Print Xml to console.                   |
+|          |                 |                                         |
+|          |                 |                                         |
+
+*** Examples 
+**** Example 1 - Parse RSS File 
+
+*Steps*
+
+Load assembly
+
+#+BEGIN_SRC fsharp
+
+> #r "bin/FsxTool.dll" ;;
+
+- module XmlNode = FsxTool.Xml.Node ;;                                     
+> module XmlDoc  = FsxTool.Xml.Doc ;;
+> 
+
+#+END_SRC
+
+Load Xml document from Uri 
+
+#+BEGIN_SRC fsharp 
+let url = "https://www.infoq.com/feed?token=WSVCFU3gCRvgXaLKxLiHKq90pV5PnH1z"  
+
+/// Print Xml 
+///
+> let doc = XmlDoc.loadUri url ;;
+val doc : FsxTool.Xml.Doc.T
+
+#+END_SRC
+
+Print Xml document 
+
+#+BEGIN_SRC fsharp
+- FsxTool.Xml.Doc.show doc ;;             
+<?xml version="1.0" encoding="utf-16"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:taxo="http://purl.org/rss/1.0/modules/taxonomy/" version="2.0">
+  <channel>
+    <title>InfoQ</title>
+    <link>http://www.infoq.com</link>
+    <description>InfoQ feed</description>
+    <item>
+      <title>Digital Ocean Adds Monitoring and Alerting Features</title>
+      <link>http://www.infoq.com/news/2017/04/digital-ocean-monitoring?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/styles/i/logo_bigger.jpg"/&gt;&lt;p&gt;Cloud infrastructure provider Digital Ocean recently released capabilities for monitoring servers and sending alerts. While not novel, this free feature is indicative of growing industry attention paid to server and application insight.&lt;/p&gt; &lt;i&gt;By Richard Seroter&lt;/i&gt;</description>
+      <category>Cloud Computing</category>
+      <category>Monitoring Tools</category>
+      <category>Monitoring</category>
+      <category>IaaS</category>
+      <category>DevOps</category>
+      <category>Development</category>
+      <category>Performance</category>
+      <category>Cloud</category>
+      <category>application performance management</category>
+      <category>Digital Ocean</category>
+      <category>news</category>
+      <pubDate>Mon, 24 Apr 2017 15:01:00 GMT</pubDate>
+      <guid>http://www.infoq.com/news/2017/04/digital-ocean-monitoring?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Richard Seroter</dc:creator>
+      <dc:date>2017-04-24T15:01:00Z</dc:date>
+      <dc:identifier>/news/2017/04/digital-ocean-monitoring/en</dc:identifier>
+    </item>
+    <item>
+      <title>TensorFlow Processor Unit Architecture</title>
+      <link>http://www.infoq.com/news/2017/04/tpu-architecture?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+      <description>&lt;img src="http://www.infoq.com/styles/i/logo_bigger.jpg"/&gt;&lt;p&gt;Google's hardware engineering team that designed and developed the TensorFlow Processor Unit detailed the architecture and benchmarking experiment earlier this month. This is a follow up post on the initial announcement of the TPU from this time last year.&lt;/p&gt; &lt;i&gt;By Dylan Raithel&lt;/i&gt;</description>
+      <category>Programming</category>
+      <category>Artificial Intelligence</category>
+      <category>Machine Learning</category>
+      <category>Development</category>
+      <category>Architecture &amp; Design</category>
+      <category>Neural Networks</category>
+      <category>Data Science</category>
+      <category>TensorFlow</category>
+      <category>Deep Learning</category>
+      <category>news</category>
+      <pubDate>Mon, 24 Apr 2017 15:00:00 GMT</pubDate>
+      <guid>http://www.infoq.com/news/2017/04/tpu-architecture?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+      <dc:creator>Dylan Raithel</dc:creator>
+      <dc:date>2017-04-24T15:00:00Z</dc:date>
+      <dc:identifier>/news/2017/04/tpu-architecture/en</dc:identifier>
+    </item>
+              ...      ... ... ... ... ... ... ... 
+#+END_SRC
+
+Show Xml structure 
+
+#+BEGIN_SRC fsharp 
+>  doc |> XmlDoc.root |> XmlNode.showStruct ;;
+
+
+(0.0) channel
+	(1.0) title
+		(2.0) #text
+	(1.1) link
+		(2.0) #text
+	(1.2) description
+		(2.0) #text
+	(1.3) item
+		(2.0) title
+			(3.0) #text
+		(2.1) link
+			(3.0) #text
+		(2.2) description
+			(3.0) #text
+		(2.3) category
+			(3.0) #text
+		(2.4) category
+			(3.0) #text
+		(2.5) category
+			(3.0) #text
+		(2.6) category
+			(3.0) #text
+		(2.7) category
+			(3.0) #text
+   ... ... ... ... ... .... 
+#+END_SRC fsharp 
+
+Get Xml namespaces 
+
+#+BEGIN_SRC fsharp 
+-  XmlDoc.getNamespaces doc ;;   
+val it : (string * string) list =
+  [("", ""); ("dc", "http://purl.org/dc/elements/1.1/")]
+> 
+
+#+END_SRC
+
+Get nodes with given tag name  
+
+#+BEGIN_SRC fsharp
+> let items = doc |> XmlDoc.root |> XmlNode.getNodesByTagName "item" ;;
+
+val items : seq<System.Xml.XmlNode>
+
+> items ;;
+val it : seq<System.Xml.XmlNode> =
+  seq
+    [seq [seq [seq []]; seq [seq []]; seq [seq []]; seq [seq []]; ...];
+     seq [seq [seq []]; seq [seq []]; seq [seq []]; seq [seq []]; ...];
+     seq [seq [seq []]; seq [seq []]; seq [seq []]; seq [seq []]; ...];
+     seq [seq [seq []]; seq [seq []]; seq [seq []]; seq [seq []]; ...]; ...]
+> 
+
+#+END_SRC
+
+Display single node: 
+
+#+BEGIN_SRC fsharp
+- let n = items |> Seq.item 0 ;; 
+
+val n : System.Xml.XmlNode
+
+> XmlNode.show n ;;     
+<title>Podcast: Chris Matts on BDD, Real Options, Risk Management and the Impact of Culture for Effective Outcomes</title>
+<link>http://www.infoq.com/podcasts/chris-matts-bdd-risk-management?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+<description>&lt;img src="http://www.infoq.com/resource/podcasts/chris-matts-bdd-risk-management/en/mediumimage/oliver-gould.jpg"/&gt;&lt;p&gt;In this podcast Chris Matts, “The IT Risk Manager”, one of the original thinkers behind Real Options, Feature Injection and Behaviour Driven Development,  talks about BDD, Real Options, Risk Management and the Impact of Culture for Effective Outcomes.&lt;/p&gt; &lt;i&gt;By Chris Matts&lt;/i&gt;</description>
+<category>InfoQ</category>
+<category>Security</category>
+<category>Business</category>
+<category>Culture</category>
+<category>Risk Management</category>
+<category>Culture &amp; Methods</category>
+<category>The InfoQ Podcast</category>
+<category>Engineering Culture Podcast</category>
+<category>podcast</category>
+<pubDate>Mon, 24 Apr 2017 20:21:00 GMT</pubDate>
+<guid>http://www.infoq.com/podcasts/chris-matts-bdd-risk-management?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+<dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Chris Matts</dc:creator>
+<dc:date xmlns:dc="http://purl.org/dc/elements/1.1/">2017-04-24T20:21:00Z</dc:date>
+<dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">/podcasts/chris-matts-bdd-risk-management/en</dc:identifier>val it : unit = ()
+> 
+
+/// Safe function - returns option type 
+///
+- XmlNode.findNodeTag ;;
+val it : (string -> FsxTool.Xml.Node.T -> System.Xml.XmlNode option) 
+> 
+
+/// Unsafe function 
+///
+- XmlNode.findNodeTag2 ;;                                            
+val it : (string -> FsxTool.Xml.Node.T -> System.Xml.XmlNode) 
+
+- n |> XmlNode.findNodeTag "title" |> Option.map XmlNode.innerText ;;
+val it : string option =
+  Some
+    "Podcast: Chris Matts on BDD, Real Options, Risk Management and the Impact of Culture for Effective Outcomes"
+> 
+- 
+- n |> XmlNode.findNodeTag2 "title" |> XmlNode.innerText ;;          
+val it : string =
+  "Podcast: Chris Matts on BDD, Real Options, Risk Management and the Impact of Culture for Effective Outcomes"
+> 
+
+- n |> XmlNode.findNodeTag "pubDate" |> Option.map XmlNode.innerText ;;
+val it : string option = Some "Mon, 24 Apr 2017 20:21:00 GMT"
+> 
+- 
+
+- n |> XmlNode.findNodeTag "link" |> Option.map XmlNode.innerText ;;   
+val it : string option =
+  Some
+    "http://www.infoq.com/podcasts/chris-matts-bdd-risk-management?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global"
+> 
+
+- n |> XmlNode.findNodeTag "dc:date" |> Option.map XmlNode.innerText ;;
+val it : string option = Some "2017-04-24T20:21:00Z"
+> 
+
+> 
+- n |> XmlNode.getNodesByTagName "category" |> Seq.map XmlNode.innerText ;;
+val it : seq<string> = seq ["InfoQ"; "Security"; "Business"; "Culture"; ...]
+> 
+
+- n |> XmlNode.getNodesByTagName "category" |> Seq.map XmlNode.innerText |> Seq.iter (printfn "%s") ;;
+InfoQ
+Security
+Business
+Culture
+Risk Management
+Culture & Methods
+The InfoQ Podcast
+Engineering Culture Podcast
+podcast
+val it : unit = ()
+> 
+
+
+- n |> XmlNode.getInnerTextByTagName "category" ;;
+val it : seq<string> =
+  seq ["Conferences"; "QCon"; "Architecture"; "Distributed Systems"; ...]
+> 
+- n |> XmlNode.getInnerTextByTagName "category" |> Seq.iter (printfn "%s") ;;
+Conferences
+QCon
+Architecture
+Distributed Systems
+Architecture & Design
+Resilience
+Microservices
+QCon London 2017
+presentation
+val it : unit = ()
+> 
+
+#+END_SRC
+
+Get all Items from RSS 
+
+#+BEGIN_SRC fsharp
+type RSSItem = {
+    RSSTitle:    string
+  ; RSSDesc:     string     
+  ; RSSCategory: string list
+  ; RSSDate:     string
+  ; RSSLink:     string 
+    }
+
+
+let parseNode (node: System.Xml.XmlNode) =
+    let title = node |> XmlNode.getTagText2 "title" 
+    let desc  = node |> XmlNode.getTagText2  "description"
+    let cats  = node |> XmlNode.getInnerTextByTagName "category" |> List.ofSeq
+    let date  = node |> XmlNode.getTagText2 "dc:date"
+    let link  = node |> XmlNode.getTagText2 "link"
+    
+    { RSSTitle = title
+    ; RSSDesc  = desc
+    ; RSSCategory = cats
+    ; RSSDate = date
+    ; RSSLink = link 
+    }
+
+> parseNode n ;;
+val it : RSSItem =
+  {RSSTitle = "Presentation: From Microliths to Microsystems";
+   RSSDesc =
+    "<img src="http://www.infoq.com/resource/presentations/microservices-principles-2017/en/mediumimage/Jonbig.JPG"/><p>Jonas Boner explores microservices from first principles, distilling their essence and putting them in their true context: distributed systems. In order to make each microservice resilient and elastic in and of itself, we have to design each individual microservice as a distributed system—a «microsystem»—architected from the ground up using the reactive principles.</p> <i>By Jonas Bonér</i>";
+   RSSCategory =
+    ["Conferences"; "QCon"; "Architecture"; "Distributed Systems";
+     "Architecture & Design"; "Resilience"; "Microservices";
+     "QCon London 2017"; "presentation"];
+   RSSDate = "2017-04-24T21:30:00Z";
+   RSSLink =
+    "http://www.infoq.com/presentations/microservices-principles-2017?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global";}
+> 
+
+
+> rssItem.RSSDate ;; 
+val it : string = "2017-04-24T21:30:00Z"
+> 
+- rssItem.RSSLink ;; 
+val it : string =
+  "http://www.infoq.com/presentations/microservices-principles-2017?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global"
+> 
+- rssItem.RSSTitle ;;
+val it : string = "Presentation: From Microliths to Microsystems"
+> 
+- 
+
+
+> let rssdata = items |> Seq.map parseNode ;;
+
+val rssdata : seq<RSSItem>
+
+> rssdata ;;
+val it : seq<RSSItem> =
+  seq
+    [{RSSTitle = "Presentation: From Microliths to Microsystems";
+      RSSDesc =
+       "<img src="http://www.infoq.com/resource/presentations/microservices-principles-2017/en/mediumimage/Jonbig.JPG"/><p>Jonas Boner explores microservices from first principles, distilling their essence and putting them in their true context: distributed systems. In order to make each microservice resilient and elastic in and of itself, we have to design each individual microservice as a distributed system—a «microsystem»—architected from the ground up using the reactive principles.</p> <i>By Jonas Bonér</i>";
+      RSSCategory =
+       ["Conferences"; "QCon"; "Architecture"; "Distributed Systems";
+        "Architecture & Design"; "Resilience"; "Microservices";
+        "QCon London 2017"; "presentation"];
+      RSSDate = "2017-04-24T21:30:00Z";
+      RSSLink =
+       "http://www.infoq.com/presentations/microservices-principles-2017?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global";};
+     {RSSTitle =
+       "Podcast: Chris Matts on BDD, Real Options, Risk Management and the Impact of Culture for Effective Outcomes";
+      RSSDesc =
+       "<img src="http://www.infoq.com/resource/podcasts/chris-matts-bdd-risk-management/en/mediumimage/oliver-gould.jpg"/><p>In this podcast Chris Matts, “The IT Risk Manager”, one of the original thinkers behind Real Options, Feature Injection and Behaviour Driven Development,  talks about BDD, Real Options, Risk Management and the Impact of Culture for Effective Outcomes.</p> <i>By Chris Matts</i>";
+      RSSCategory =
+       ["InfoQ"; "Security"; "Business"; "Culture"; "Risk Management";
+        "Culture & Methods"; "The InfoQ Podcast";
+        "Engineering Culture Podcast"; "podcast"];
+      RSSDate = "2017-04-24T20:21:00Z";
+      RSSLink =
+       "http://www.infoq.com/podcasts/chris-matts-bdd-risk-management?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global";};
+     {RSSTitle = "Digital Ocean Adds Monitoring and Alerting Features";
+      RSSDesc =
+       "<img src="http://www.infoq.com/styles/i/logo_bigger.jpg"/><p>Cloud infrastructure provider Digital Ocean recently released capabilities for monitoring servers and sending alerts. While not novel, this free feature is indicative of growing industry attention paid to server and application insight.</p> <i>By Richard Seroter</i>";
+      RSSCategory =
+       ["Cloud Computing"; "Monitoring Tools"; "Monitoring"; "IaaS"; "DevOps";
+        "Development"; "Performance"; "Cloud";
+        "application performance management"; "Digital Ocean"; "news"];
+      RSSDate = "2017-04-24T15:01:00Z";
+      RSSLink =
+       "http://www.infoq.com/news/2017/04/digital-ocean-monitoring?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global";};
+     {RSSTitle = "TensorFlow Processor Unit Architecture";
+      RSSDesc =
+       "<img src="http://www.infoq.com/styles/i/logo_bigger.jpg"/><p>Google's hardware engineering team that designed and developed the TensorFlow Processor Unit detailed the architecture and benchmarking experiment earlier this month. This is a follow up post on the initial announcement of the TPU from this time last year.</p> <i>By Dylan Raithel</i>";
+      RSSCategory =
+       ["Programming"; "Artificial Intelligence"; "Machine Learning";
+        "Development"; "Architecture & Design"; "Neural Networks";
+        "Data Science"; "TensorFlow"; "Deep Learning"; "news"];
+      RSSDate = "2017-04-24T15:00:00Z";
+      RSSLink =
+       "http://www.infoq.com/news/2017/04/tpu-architecture?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global";};
+     ...]
+> 
+
+#+END_SRC
+
+Print all items: 
+
+#+BEGIN_SRC fsharp 
+
+let dispRSSItem (item: RSSItem) =
+    System.Console.WriteLine("
+Title:         {0}
+Date:          {1}
+Description:   {2}   
+Link:          {3}
+    ", item.RSSTitle, item.RSSDate, item.RSSDesc, item.RSSLink)
+    
+
+> items |> Seq.map parseNode |> Seq.iter dispRSSItem ;;          
+
+Title:         Presentation: From Microliths to Microsystems
+Date:          2017-04-24T21:30:00Z
+Description:   <img src="http://www.infoq.com/resource/presentations/microservices-principles-2017/en/mediumimage/Jonbig.JPG"/><p>Jonas Boner explores microservices from first principles, distilling their essence and putting them in their true context: distributed systems. In order to make each microservice resilient and elastic in and of itself, we have to design each individual microservice as a distributed system—a «microsystem»—architected from the ground up using the reactive principles.</p> <i>By Jonas Bonér</i>   
+Link:          http://www.infoq.com/presentations/microservices-principles-2017?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+    
+
+Title:         Podcast: Chris Matts on BDD, Real Options, Risk Management and the Impact of Culture for Effective Outcomes
+Date:          2017-04-24T20:21:00Z
+Description:   <img src="http://www.infoq.com/resource/podcasts/chris-matts-bdd-risk-management/en/mediumimage/oliver-gould.jpg"/><p>In this podcast Chris Matts, “The IT Risk Manager”, one of the original thinkers behind Real Options, Feature Injection and Behaviour Driven Development,  talks about BDD, Real Options, Risk Management and the Impact of Culture for Effective Outcomes.</p> <i>By Chris Matts</i>   
+Link:          http://www.infoq.com/podcasts/chris-matts-bdd-risk-management?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+    
+
+Title:         Digital Ocean Adds Monitoring and Alerting Features
+Date:          2017-04-24T15:01:00Z
+Description:   <img src="http://www.infoq.com/styles/i/logo_bigger.jpg"/><p>Cloud infrastructure provider Digital Ocean recently released capabilities for monitoring servers and sending alerts. While not novel, this free feature is indicative of growing industry attention paid to server and application insight.</p> <i>By Richard Seroter</i>   
+Link:          http://www.infoq.com/news/2017/04/digital-ocean-monitoring?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+    
+
+Title:         TensorFlow Processor Unit Architecture
+Date:          2017-04-24T15:00:00Z
+Description:   <img src="http://www.infoq.com/styles/i/logo_bigger.jpg"/><p>Google's hardware engineering team that designed and developed the TensorFlow Processor Unit detailed the architecture and benchmarking experiment earlier this month. This is a follow up post on the initial announcement of the TPU from this time last year.</p> <i>By Dylan Raithel</i>   
+Link:          http://www.infoq.com/news/2017/04/tpu-architecture?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+    
+
+Title:         The AI Misinformation Epidemic
+Date:          2017-04-24T14:22:00Z
+Description:   <img src="http://www.infoq.com/styles/i/logo_bigger.jpg"/><p>Over the past five years, Google searches for Machine Learning have gone up five times. “Fo anything that has machine learning in it or blockchain in it, the valuation goes up, 2, 3, 4, 5x”, Andy Stewart pointed out. Zachary Lipton claimed a "misinformation epidemic" in the field in a recent blog post. In this article we present the technical perspective of ML and how it can be presented.</p> <i>By Alex Giamas</i>   
+Link:          http://www.infoq.com/news/2017/04/AI-Misinformation-Epidemic?utm_campaign=infoq_content&utm_source=infoq&utm_medium=feed&utm_term=global
+    
+   ....  ... ... ... 
+
+
+#+END_SRC
+
+
+*Script* 
+
+File: xmlScript.fsx 
+
+#+BEGIN_SRC fsharp 
+
+#r "bin/FsxTool.dll"
+
+module XmlDoc  =  FsxTool.Xml.Doc
+module XmlNode =  FsxTool.Xml.Node
+
+let url = "https://www.infoq.com/feed?token=WSVCFU3gCRvgXaLKxLiHKq90pV5PnH1z"
+
+let doc = XmlDoc.loadUri url
+
+XmlDoc.show doc
+
+let root = XmlDoc.root doc
+
+let items = doc |> XmlDoc.root |> XmlNode.getNodesByTagName "item" ;;
+
+let n = items |> Seq.item 0 ;;
+
+type RSSItem = {
+    RSSTitle:    string
+  ; RSSDesc:     string     
+  ; RSSCategory: string list
+  ; RSSDate:     string
+  ; RSSLink:     string 
+    }
+
+let parseNode (node: System.Xml.XmlNode) =
+    let title = node |> XmlNode.getTagText2 "title" 
+    let desc  = node |> XmlNode.getTagText2  "description"
+    let cats  = node |> XmlNode.getInnerTextByTagName "category" |> List.ofSeq
+    let date  = node |> XmlNode.getTagText2 "dc:date"
+    let link  = node |> XmlNode.getTagText2 "link"
+    
+    { RSSTitle = title
+    ; RSSDesc  = desc
+    ; RSSCategory = cats
+    ; RSSDate = date
+    ; RSSLink = link 
+    }
+
+let dispRSSItem (item: RSSItem) =
+    System.Console.WriteLine("
+Title:         {0}
+Date:          {1}
+Description:   {2}   
+Link:          {3}
+    ", item.RSSTitle, item.RSSDate, item.RSSDesc, item.RSSLink)
+    
+
+#+END_SRC
+
+
+Usage: 
+
+#+BEGIN_SRC fsharp 
+$ fsharpi --use:xmlScript.fsx 
+
+F# Interactive for F# 4.1
+Freely distributed under the Apache 2.0 Open Source License
+
+For help type #help;;
+
+> 
+--> Referenced '/home/archbox/Documents/projects/FsxTools.fsharp/bin/FsxTool.dll' (file may be locked by F# Interactive process)
+  ... ... .., 
+
+val url : string =
+  "https://www.infoq.com/feed?token=WSVCFU3gCRvgXaLKxLiHKq90pV5PnH1z"
+val doc : FsxTool.Xml.Doc.T
+val root : System.Xml.XmlElement
+val items : seq<System.Xml.XmlNode>
+
+> 
+val n : System.Xml.XmlNode
+
+> 
+type RSSItem =
+  {RSSTitle: string;
+   RSSDesc: string;
+   RSSCategory: string list;
+   RSSDate: string;
+   RSSLink: string;}
+val parseNode : node:System.Xml.XmlNode -> RSSItem
+val dispRSSItem : item:RSSItem -> unit
+
+> 
+- XmlNode.show n ;;
+<title>Presentation: From Microliths to Microsystems</title>
+<link>http://www.infoq.com/presentations/microservices-principles-2017?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</link>
+<description>&lt;img src="http://www.infoq.com/resource/presentations/microservices-principles-2017/en/mediumimage/Jonbig.JPG"/&gt;&lt;p&gt;Jonas Boner explores microservices from first principles, distilling their essence and putting them in their true context: distributed systems. In order to make each microservice resilient and elastic in and of itself, we have to design each individual microservice as a distributed system—a «microsystem»—architected from the ground up using the reactive principles.&lt;/p&gt; &lt;i&gt;By Jonas Bonér&lt;/i&gt;</description>
+<category>Conferences</category>
+<category>QCon</category>
+<category>Architecture</category>
+<category>Distributed Systems</category>
+<category>Architecture &amp; Design</category>
+<category>Resilience</category>
+<category>Microservices</category>
+<category>QCon London 2017</category>
+<category>presentation</category>
+<pubDate>Mon, 24 Apr 2017 21:30:00 GMT</pubDate>
+<guid>http://www.infoq.com/presentations/microservices-principles-2017?utm_campaign=infoq_content&amp;utm_source=infoq&amp;utm_medium=feed&amp;utm_term=global</guid>
+<dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Jonas Bonér</dc:creator>
+<dc:date xmlns:dc="http://purl.org/dc/elements/1.1/">2017-04-24T21:30:00Z</dc:date>
+<dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">/presentations/microservices-principles-2017/en</dc:identifier>val it : unit = ()
+> 
+
+
+#+END_SRC
+
 ** TODO FsxTool.HttpReq - Http Client Library 
 
