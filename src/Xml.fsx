@@ -28,6 +28,9 @@ module Node =
         tagName |> elem.GetElementsByTagName
                 |> xmlNodeListToSeq
 
+    let getInnerTextByTagName tagName (node: T) =
+        node |> getNodesByTagName tagName
+             |> Seq.map (fun (n: XmlNode) -> n.InnerText)
 
     /// Get attribute value from xml node. This function returns
     /// an option None value if the attribute doesn't exist. 
