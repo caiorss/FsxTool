@@ -492,7 +492,7 @@ module AsmAttr =
     let loadFrom (assemblyFile: string) =
         Assembly.LoadFrom assemblyFile
 
-    let loadFile (asmFile: string) =
+    let loadUri (asmFile: string) =
         Assembly.LoadFile asmFile
 
     /// Try load assembly from GAC, if its not in GAC, then it loads the dll file.
@@ -733,7 +733,7 @@ module AsmDisplay =
     let showType (asmFile: string) (typeName: string) =
         let xmlFile = System.IO.Path.ChangeExtension(asmFile, "xml")
         let doc = if System.IO.File.Exists xmlFile
-                  then Some (FXml.Doc.loadFile xmlFile)
+                  then Some (FXml.Doc.loadUri xmlFile)
                   else None
 
         AsmAttr.loadCont asmFile (AsmAttr.findType typeName
@@ -828,7 +828,7 @@ module AsmDisplay =
         let aux asm =
             let xmlFile = System.IO.Path.ChangeExtension(asmFile, "xml")
             let doc = if System.IO.File.Exists xmlFile
-                      then Some (FXml.Doc.loadFile xmlFile)
+                      then Some (FXml.Doc.loadUri xmlFile)
                       else None
 
             asm   |> AsmAttr.getExportedNS

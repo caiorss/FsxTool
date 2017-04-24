@@ -261,7 +261,7 @@ module Doc =
         doc
 
     /// Load XML from file or URL.
-    let loadFile (uri: string) =
+    let loadUri (uri: string) =
         let doc = new T ()
         doc.Load(uri)
         doc
@@ -385,37 +385,37 @@ module File =
 
     /// Display Xml file or xml uri (url)
     let show xmlFile =
-        xmlFile |> Doc.loadFile 
+        xmlFile |> Doc.loadUri 
                 |> Doc.show
 
     let save xmlUri (xmlFile: string) =
-        let doc = Doc.loadFile xmlUri
+        let doc = Doc.loadUri xmlUri
         doc.Save(xmlFile)
 
     /// Save xml from uri or file to xml file without namespace
     let saveNoNs xmlUri (xmlFile: string) =
-        let doc = xmlUri |> Doc.loadFile
+        let doc = xmlUri |> Doc.loadUri
                          |> Doc.removeNamespaces
         doc.Save(xmlFile)
 
     /// Display Xml structure             
     let showStruct xmlFile =
-        xmlFile |> Doc.loadFile
+        xmlFile |> Doc.loadUri
                 |> Doc.root
                 |> Node.showStruct
 
     let showStructAttr xmlFile =
-        xmlFile |> Doc.loadFile
+        xmlFile |> Doc.loadUri
                 |> Doc.root
                 |> Node.showStructAttr
 
     let showStructNs xmlFile =
-        xmlFile |> Doc.loadFile
+        xmlFile |> Doc.loadUri
                 |> Doc.root
                 |> Node.showStructNs
 
     let showNamespaces xmlFile =
-        xmlFile |> Doc.loadFile
+        xmlFile |> Doc.loadUri
                 |> Doc.getNamespaces
                 |> Seq.iter (fun (k, v) -> printfn "Prefix = %s" k;
                                            printfn "Uri    = %s\n" v
@@ -430,42 +430,42 @@ module File =
     /// FXml.File.formatUri "http://rss.cnn.com/rss/edition_world.rss" "news.rss"            
     /// </code>    
     let formatUri xmlUri (xmlFile: string) =
-        let doc = Doc.loadFile xmlUri
+        let doc = Doc.loadUri xmlUri
         doc.Save(xmlFile)
 
     let showXPathValue xmlFile xpath =
-        xmlFile |> Doc.loadFile
+        xmlFile |> Doc.loadUri
                 |> FXPath.xpathSelectValue xpath
                 |> Seq.iter (printfn "%O\n")
 
     let showXPathInnerText xmlFile xpath =
-        xmlFile |> Doc.loadFile
+        xmlFile |> Doc.loadUri
                 |> FXPath.xpathSelectInnerText xpath
                 |> Seq.iter (printfn "%O\n")                
 
     let showXPathInnerTextNoNS xmlFile xpath =
-        xmlFile |> Doc.loadFile
+        xmlFile |> Doc.loadUri
                 |> Doc.removeNamespaces
                 |> FXPath.xpathSelectInnerText xpath
                 |> Seq.iter (printfn "%O\n")                
 
     let showXPathInnerTextNs xmlFile (prefix, uri) xpath =
-        xmlFile |> Doc.loadFile
+        xmlFile |> Doc.loadUri
                 |> FXPath.xpathSelectInnerTextNs (prefix, uri) xpath
                 |> Seq.iter (printfn "%O\n")                
 
     let showXPathValueNs xmlFile (prefix, uri)  xpath =
-        xmlFile |> Doc.loadFile
+        xmlFile |> Doc.loadUri
                 |> FXPath.xpathSelectValueNs (prefix, uri) xpath
                 |> Seq.iter (printfn "%O\n")
 
     let showXpathAttr xmlFile xpath attribute  =
-        xmlFile |> Doc.loadFile
+        xmlFile |> Doc.loadUri
                 |> FXPath.xpathSelectAttr xpath attribute
                 |> Seq.iter (printfn "%O\n")
 
     let showXPathAttrAllFn fn xmlUri xpath =
-        let nodes = xmlUri |> Doc.loadFile
+        let nodes = xmlUri |> Doc.loadUri
                            |> fn
                            |> FXPath.selectNodes xpath
 
@@ -494,19 +494,19 @@ module File =
 
 
     let showXpathAttrNoNS xmlFile xpath attribute  =
-        xmlFile |> Doc.loadFile
+        xmlFile |> Doc.loadUri
                 |> Doc.removeNamespaces
                 |> FXPath.xpathSelectAttr xpath attribute
                 |> Seq.iter (printfn "%O\n")
 
     let showXpathAttrNS xmlFile (prefix, uri) xpath attribute  =
-        xmlFile |> Doc.loadFile
+        xmlFile |> Doc.loadUri
                 |> FXPath.xpathSelectAttrNs (prefix, uri) xpath attribute
                 |> Seq.iter (printfn "%O\n")
 
 
     let showXPathNodesNoNS xmlFile xpath =
-        xmlFile |> Doc.loadFile
+        xmlFile |> Doc.loadUri
                 |> Doc.removeNamespaces
                 |> FXPath.selectNodes xpath
                 |> Seq.iter (fun node -> Node.show2 node;
