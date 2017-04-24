@@ -61,7 +61,7 @@ module Node =
         seq {for n in node.ChildNodes do yield n }
 
     /// Get all child nodes ignoring comment nodes
-    let cnodesNoComment (node: T) =
+    let childNodesNoComment (node: T) =
         seq {for n in node.ChildNodes do if n.NodeType <> XmlNodeType.Comment
                                          then yield n }
 
@@ -75,7 +75,7 @@ module Node =
 
     /// Get all attributes from a group of similar child nodes
     let nodesAttr attr (node: T): string seq =
-        node |> cnodesNoComment
+        node |> childNodesNoComment
              |> Seq.map (attrv2 attr)
 
     let nodesAttrs attrlist (node: T) =
