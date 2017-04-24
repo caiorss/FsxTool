@@ -107,6 +107,10 @@ module Node =
              |> Seq.tryFind (fun node -> node.Name = tag)
              |> Option.map (fun node -> node.InnerText)
 
+    let getTagText2 tag (node: T) =
+        node |> getTagText tag
+             |> Option.get
+
     /// Check if node has a given tag(name)
     let nodeHasTag tag (node: T) =
         node.Name = tag 
