@@ -23,6 +23,12 @@ module Node =
     let name (node: T) =
         node.Name 
 
+    let getNodesByTagName tagName (node: T) =
+        let elem = node :?> XmlElement
+        tagName |> elem.GetElementsByTagName
+                |> xmlNodeListToSeq
+
+
     /// Get attribute value from xml node. This function returns
     /// an option None value if the attribute doesn't exist. 
     let attrv (attr: string) (node: T) =
