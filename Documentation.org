@@ -250,6 +250,18 @@ Module Doc:
 *** Examples 
 **** Example 1 - Parse RSS File 
 
+*RSS Documentation*
+
+ - [[http://www.whatisrss.com/][What Is RSS? RSS Explained - www.WhatIsRSS.com]]
+
+ - [[https://www.xul.fr/en-xml-rss.html][RSS tutorial: building and using a feed, step by step.]]
+
+ - [[https://www.xml.com/pub/a/2002/12/18/dive-into-xml.html][What Is RSS]]
+
+ - [[https://www.mnot.net/rss/tutorial/][RSS Tutorial]]
+
+ - [[http://stackoverflow.com/questions/34331595/parse-rss-pubdate-to-datetime][c# - Parse RSS pubdate to DateTime - Stack Overflow]]
+
 *Steps*
 
 Load assembly
