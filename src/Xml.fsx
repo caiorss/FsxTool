@@ -102,7 +102,7 @@ module Node =
              |> Option.get
 
     /// Try to find a child node which has a given tag and returns its text
-    let findTextFromNodeTag tag (node: T) =
+    let getTagText tag (node: T) =
         node |> cnodes
              |> Seq.tryFind (fun node -> node.Name = tag)
              |> Option.map (fun node -> node.InnerText)
