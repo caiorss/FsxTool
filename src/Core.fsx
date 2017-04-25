@@ -53,6 +53,16 @@ module Option =
         | Some v as o when f v -> o
         | _                    -> None
 
+    let sequence mlist =
+      let (>>=) = fun ma f -> Option.bind f ma
+      let unit x  = Option.Some x
+      let mcons p q =
+        p >>= fun x ->
+        q >>= fun y ->
+        unit (x::y)
+      List.foldBack mcons mlist (unit [])
+
+
 
 module Result = 
 
