@@ -1,3 +1,7 @@
+#+TITLE: FsxTool Documentation
+#+DESCRIPTION: FsxTool library documentation and examples.
+#+STARTUP: 
+
 * Documentation
 ** Overview 
 
@@ -536,8 +540,317 @@ val it : int = 11
 > 
 
 #+END_SRC
+** FsxTool.Sys 
+
+Module: Path - Path manipulation 
+
+| Function     | Signature                                       | Description             |
+|--------------+-------------------------------------------------+-------------------------|
+|              |                                                 |                         |
+| join         | string list -> string                           | Join a list of paths    |
+| combine      | string -> string -> string                      | Combine two paths       |
+| getDirectory | string -> string                                | Get directory from path |
+| getFileName  | string -> string                                | Get file name form path |
+| changeExt    | (extension: string) -> (path: string) -> string | Change path extension   |
+|              |                                                 |                         |
+
+Module: File
+
+| Function     | Signature                                       | Description               |
+|--------------+-------------------------------------------------+---------------------------|
+|              |                                                 |                           |
+| delete       | string -> unit                                  | Delete file               |
+| exists       | string -> bool                                  | Check if file exists.     |
+| move         | (srcFile: string) -> (destFile: string) -> unit | Move file                 |
+| copy         | (srcFile: string) -> (destFile: string) -> unit | Copy file                 |
+| moveTo       | (directory: string) -> (file: string) -> unit   | Move file to directory    |
+| copyTo       | (directory: string) -> (file: string) -> unit   | Copy file to directory    |
+|              |                                                 |                           |
+| readFile     | (file: string) -> string                        | Read all file text        |
+| readAllLines | (file: string) -> string []                     | Read all file lines       |
+| readAllBytes | (file: string) -> bytes []                      | Read all bytes from file. |
+| writeFile    | (file: string) -> (contents: string) -> unit    | Write contents to file    |
+|              |                                                 |                           |
+
+Module: Directory 
+
+| Function    | Signature                                | Description                            |
+|-------------+------------------------------------------+----------------------------------------|
+|             |                                          |                                        |
+| getFiles    | path:string -> seq<string>               | Get directory files                    |
+| getFilesAbs | path:string -> seq<string>               | Get directory files with absolute path |
+| getFilesExt | path:string -> ext:string -> seq<string> | Get all files with given extension     |
+|             |                                          |                                        |
+** TODO FsxTool.HttpReq - Http Client Library 
+*** Types 
+
+Module: FsxTool.HttpReq.HttpTypes
+
+#+BEGIN_SRC fsharp 
+module HttpTypes =
+    
+    type HttpMethod =
+        | GET 
+        | POST
+        | PUT
+        | HEAD
+        | DELETE
+        | PATCH 
+
+    type HttpProp =
+        | Method            of HttpMethod 
+        | ContentType       of string
+        | UserAgent         of string
+        | Headers           of (string * string) list 
+        | PostParams        of (string * string) list
+        | PostPayload       of string
+        | PostPayloadBytes  of byte []
+        | Timeout           of int
+        | KeepAlive         of bool
+        | Redirect          of bool 
+#+END_SRC
+*** Examples 
+**** GET Request 
+
+#+BEGIN_SRC fsharp
+open FsxTool.HttpReq 
+open FsxTool.HttpReq.HttpTypes 
+
+let url = "http://www.httpbin.org/get"
+
+let request = Http.request url [ Method GET 
+                              ; ContentType "text"
+                              ; UserAgent "F# Browser"
+                              ; Headers [  "SoapMethod", "getOrdersXML"
+                                         ; "Language",   "Spanish"
+                                         ;   
+                                        ]  
+                                ]
+
+val request : System.Net.HttpWebRequest
+
+> request ;;
+val it : System.Net.HttpWebRequest =
+  System.Net.HttpWebRequest
+    {Accept = null;
+     Address = http://www.httpbin.org/get;
+     AllowAutoRedirect = true;
+     AllowReadStreamBuffering = false;
+     AllowWriteStreamBuffering = true;
+     AuthenticationLevel = MutualAuthRequested;
+     AutomaticDecompression = None;
+     CachePolicy = null;
+     ClientCertificates = seq [];
+             ... ... ... 
+
+     ServicePoint = System.Net.ServicePoint;
+     SupportsCookieContainer = true;
+     Timeout = 100000;
+     TransferEncoding = null;
+     UnsafeAuthenticatedConnectionSharing = false;
+     UseDefaultCredentials = false;
+     UserAgent = "F# Browser";}
 
 
+- let resp = Http.getResponse request ;;
+
+val resp : System.Net.HttpWebResponse
+
+> resp ;;
+val it : System.Net.HttpWebResponse =
+  System.Net.HttpWebResponse
+    {CharacterSet = "ISO-8859-1";
+     ContentEncoding = "";
+     ContentLength = 291L;
+     ContentType = "application/json";
+     Cookies = seq [];
+     Headers = seq ["Connection"; "Server"; "Date"; "Content-Type"; ...];
+     IsFromCache = false;
+     IsMutuallyAuthenticated = ?;
+     LastModified = 4/24/2017 8:16:19 PM;
+     Method = "GET";
+     ProtocolVersion = 1.1;
+     ResponseUri = http://www.httpbin.org/get;
+     Server = "gunicorn/19.7.1";
+     StatusCode = OK;
+     StatusDescription = "OK";
+     SupportsHeaders = true;}
+
+
+- let text = Http.getResponseString request ;;
+
+val text : string =
+  "{
+  "args": {}, 
+  "headers": {
+    "Connection": "close", 
+ "+[230 chars]
+
+> 
+
+> printfn "%s" text ;;
+{
+  "args": {}, 
+  "headers": {
+    "Connection": "close", 
+    "Content-Type": "text", 
+    "Host": "www.httpbin.org", 
+    "Language": "Spanish", 
+    "Soapmethod": "getOrdersXML", 
+    "User-Agent": "F# Browser"
+  }, 
+  "origin": "177.207.118.2", 
+  "url": "http://www.httpbin.org/get"
+}
+
+val it : unit = ()
+> 
+
+///      Or          //
+//-------------------//
+
+
+
+let getRequest () =
+    let url =  "http://www.httpbin.org/get"
+    let reqParams =
+        [ Method GET 
+        ; ContentType "text"
+        ; UserAgent "F# Browser"
+        ; Headers [  "SoapMethod", "getOrdersXML"
+                   ; "Language",   "Spanish"
+                  ]  
+          ]
+    Http.requestString url reqParams
+
+> let out = getRequest() ;;
+
+val out : string =
+  "{
+  "args": {}, 
+  "headers": {
+    "Connection": "close", 
+ "+[230 chars]
+
+> printfn "%s" out ;;                              
+{
+  "args": {}, 
+  "headers": {
+    "Connection": "close", 
+    "Content-Type": "text", 
+    "Host": "www.httpbin.org", 
+    "Language": "Spanish", 
+    "Soapmethod": "getOrdersXML", 
+    "User-Agent": "F# Browser"
+  }, 
+  "origin": "177.207.118.2", 
+  "url": "http://www.httpbin.org/get"
+}
+
+val it : unit = ()
+> 
+
+#+END_SRC
+
+**** POST Request 
+***** Form 
+
+#+BEGIN_SRC fsharp 
+#r "bin/FsxTool.dll"
+
+open FsxTool.HttpReq 
+open FsxTool.HttpReq.HttpTypes 
+ 
+
+let postForm () =
+    let url = "http://www.httpbin.org/post"
+    let reqParams = [
+                      Method POST
+                    ; ContentType "application/x-www-form-urlencoded"
+                    ; UserAgent "Firefox"
+                    ; PostParams [("key1", "value1");
+                                  ("key2", "value2");
+                                  ("key3", "value3")
+                                  ]
+                          ]
+    printfn "%s" <| Http.requestString url reqParams
+                          
+
+> postForm () ;;
+{
+  "args": {}, 
+  "data": "", 
+  "files": {}, 
+  "form": {
+    "key1": "value1", 
+    "key2": "value2", 
+    "key3": "value3"
+  }, 
+  "headers": {
+    "Connection": "close", 
+    "Content-Length": "36", 
+    "Content-Type": "application/x-www-form-urlencoded", 
+    "Expect": "100-continue", 
+    "Host": "www.httpbin.org", 
+    "User-Agent": "Firefox"
+  }, 
+  "json": null, 
+  "origin": "177.207.118.2", 
+  "url": "http://www.httpbin.org/post"
+}
+
+val it : unit = ()
+> 
+
+#+END_SRC
+
+***** Json payload 
+
+#+BEGIN_SRC fsharp 
+#r "bin/FsxTool.dll"
+
+open FsxTool.HttpReq 
+open FsxTool.HttpReq.HttpTypes 
+ 
+let  httpPostJson () =    
+    let url = "http://www.httpbin.org/post"
+    let reqParams =  [
+        Method POST;
+        // Headers     [("Accept", "application/json")];
+        ContentType "application/json";
+        UserAgent   "Firefox Fake User Agent";
+        PostPayload "{\"name\": \"John\", \"id\": 2010, \"lang\" : \"es\" }" ;
+        ]
+    printfn "%s" <| Http.requestString url reqParams
+
+
+> httpPostJson () ;;
+{
+  "args": {}, 
+  "data": "{\"name\": \"John\", \"id\": 2010, \"lang\" : \"es\" }", 
+  "files": {}, 
+  "form": {}, 
+  "headers": {
+    "Connection": "close", 
+    "Content-Length": "44", 
+    "Content-Type": "application/json", 
+    "Expect": "100-continue", 
+    "Host": "www.httpbin.org", 
+    "User-Agent": "Firefox Fake User Agent"
+  }, 
+  "json": {
+    "id": 2010, 
+    "lang": "es", 
+    "name": "John"
+  }, 
+  "origin": "177.207.118.2", 
+  "url": "http://www.httpbin.org/post"
+}
+
+val it : unit = ()
+> 
+
+#+END_SRC
 
 ** FsxTool.Xml - Xml Parsing Combinators 
 *** Functions 
@@ -1118,318 +1431,5 @@ val dispRSSItem : item:RSSItem -> unit
 <dc:identifier xmlns:dc="http://purl.org/dc/elements/1.1/">/presentations/microservices-principles-2017/en</dc:identifier>val it : unit = ()
 > 
 
-
-#+END_SRC
-
-** FsxTool.Sys 
-
-Module: Path - Path manipulation 
-
-| Function     | Signature                                       | Description             |
-|--------------+-------------------------------------------------+-------------------------|
-|              |                                                 |                         |
-| join         | string list -> string                           | Join a list of paths    |
-| combine      | string -> string -> string                      | Combine two paths       |
-| getDirectory | string -> string                                | Get directory from path |
-| getFileName  | string -> string                                | Get file name form path |
-| changeExt    | (extension: string) -> (path: string) -> string | Change path extension   |
-|              |                                                 |                         |
-
-Module: File
-
-| Function     | Signature                                       | Description               |
-|--------------+-------------------------------------------------+---------------------------|
-|              |                                                 |                           |
-| delete       | string -> unit                                  | Delete file               |
-| exists       | string -> bool                                  | Check if file exists.     |
-| move         | (srcFile: string) -> (destFile: string) -> unit | Move file                 |
-| copy         | (srcFile: string) -> (destFile: string) -> unit | Copy file                 |
-| moveTo       | (directory: string) -> (file: string) -> unit   | Move file to directory    |
-| copyTo       | (directory: string) -> (file: string) -> unit   | Copy file to directory    |
-|              |                                                 |                           |
-| readFile     | (file: string) -> string                        | Read all file text        |
-| readAllLines | (file: string) -> string []                     | Read all file lines       |
-| readAllBytes | (file: string) -> bytes []                      | Read all bytes from file. |
-| writeFile    | (file: string) -> (contents: string) -> unit    | Write contents to file    |
-|              |                                                 |                           |
-
-Module: Directory 
-
-| Function    | Signature                                | Description                            |
-|-------------+------------------------------------------+----------------------------------------|
-|             |                                          |                                        |
-| getFiles    | path:string -> seq<string>               | Get directory files                    |
-| getFilesAbs | path:string -> seq<string>               | Get directory files with absolute path |
-| getFilesExt | path:string -> ext:string -> seq<string> | Get all files with given extension     |
-|             |                                          |                                        |
-
-** TODO FsxTool.HttpReq - Http Client Library 
-*** Types 
-
-Module: FsxTool.HttpReq.HttpTypes
-
-#+BEGIN_SRC fsharp 
-module HttpTypes =
-    
-    type HttpMethod =
-        | GET 
-        | POST
-        | PUT
-        | HEAD
-        | DELETE
-        | PATCH 
-
-    type HttpProp =
-        | Method            of HttpMethod 
-        | ContentType       of string
-        | UserAgent         of string
-        | Headers           of (string * string) list 
-        | PostParams        of (string * string) list
-        | PostPayload       of string
-        | PostPayloadBytes  of byte []
-        | Timeout           of int
-        | KeepAlive         of bool
-        | Redirect          of bool 
-#+END_SRC
-*** Examples 
-**** GET Request 
-
-#+BEGIN_SRC fsharp
-open FsxTool.HttpReq 
-open FsxTool.HttpReq.HttpTypes 
-
-let url = "http://www.httpbin.org/get"
-
-let request = Http.request url [ Method GET 
-                              ; ContentType "text"
-                              ; UserAgent "F# Browser"
-                              ; Headers [  "SoapMethod", "getOrdersXML"
-                                         ; "Language",   "Spanish"
-                                         ;   
-                                        ]  
-                                ]
-
-val request : System.Net.HttpWebRequest
-
-> request ;;
-val it : System.Net.HttpWebRequest =
-  System.Net.HttpWebRequest
-    {Accept = null;
-     Address = http://www.httpbin.org/get;
-     AllowAutoRedirect = true;
-     AllowReadStreamBuffering = false;
-     AllowWriteStreamBuffering = true;
-     AuthenticationLevel = MutualAuthRequested;
-     AutomaticDecompression = None;
-     CachePolicy = null;
-     ClientCertificates = seq [];
-             ... ... ... 
-
-     ServicePoint = System.Net.ServicePoint;
-     SupportsCookieContainer = true;
-     Timeout = 100000;
-     TransferEncoding = null;
-     UnsafeAuthenticatedConnectionSharing = false;
-     UseDefaultCredentials = false;
-     UserAgent = "F# Browser";}
-
-
-- let resp = Http.getResponse request ;;
-
-val resp : System.Net.HttpWebResponse
-
-> resp ;;
-val it : System.Net.HttpWebResponse =
-  System.Net.HttpWebResponse
-    {CharacterSet = "ISO-8859-1";
-     ContentEncoding = "";
-     ContentLength = 291L;
-     ContentType = "application/json";
-     Cookies = seq [];
-     Headers = seq ["Connection"; "Server"; "Date"; "Content-Type"; ...];
-     IsFromCache = false;
-     IsMutuallyAuthenticated = ?;
-     LastModified = 4/24/2017 8:16:19 PM;
-     Method = "GET";
-     ProtocolVersion = 1.1;
-     ResponseUri = http://www.httpbin.org/get;
-     Server = "gunicorn/19.7.1";
-     StatusCode = OK;
-     StatusDescription = "OK";
-     SupportsHeaders = true;}
-
-
-- let text = Http.getResponseString request ;;
-
-val text : string =
-  "{
-  "args": {}, 
-  "headers": {
-    "Connection": "close", 
- "+[230 chars]
-
-> 
-
-> printfn "%s" text ;;
-{
-  "args": {}, 
-  "headers": {
-    "Connection": "close", 
-    "Content-Type": "text", 
-    "Host": "www.httpbin.org", 
-    "Language": "Spanish", 
-    "Soapmethod": "getOrdersXML", 
-    "User-Agent": "F# Browser"
-  }, 
-  "origin": "177.207.118.2", 
-  "url": "http://www.httpbin.org/get"
-}
-
-val it : unit = ()
-> 
-
-///      Or          //
-//-------------------//
-
-
-
-let getRequest () =
-    let url =  "http://www.httpbin.org/get"
-    let reqParams =
-        [ Method GET 
-        ; ContentType "text"
-        ; UserAgent "F# Browser"
-        ; Headers [  "SoapMethod", "getOrdersXML"
-                   ; "Language",   "Spanish"
-                  ]  
-          ]
-    Http.requestString url reqParams
-
-> let out = getRequest() ;;
-
-val out : string =
-  "{
-  "args": {}, 
-  "headers": {
-    "Connection": "close", 
- "+[230 chars]
-
-> printfn "%s" out ;;                              
-{
-  "args": {}, 
-  "headers": {
-    "Connection": "close", 
-    "Content-Type": "text", 
-    "Host": "www.httpbin.org", 
-    "Language": "Spanish", 
-    "Soapmethod": "getOrdersXML", 
-    "User-Agent": "F# Browser"
-  }, 
-  "origin": "177.207.118.2", 
-  "url": "http://www.httpbin.org/get"
-}
-
-val it : unit = ()
-> 
-
-#+END_SRC
-
-**** POST Request 
-***** Form 
-
-#+BEGIN_SRC fsharp 
-#r "bin/FsxTool.dll"
-
-open FsxTool.HttpReq 
-open FsxTool.HttpReq.HttpTypes 
- 
-
-let postForm () =
-    let url = "http://www.httpbin.org/post"
-    let reqParams = [
-                      Method POST
-                    ; ContentType "application/x-www-form-urlencoded"
-                    ; UserAgent "Firefox"
-                    ; PostParams [("key1", "value1");
-                                  ("key2", "value2");
-                                  ("key3", "value3")
-                                  ]
-                          ]
-    printfn "%s" <| Http.requestString url reqParams
-                          
-
-> postForm () ;;
-{
-  "args": {}, 
-  "data": "", 
-  "files": {}, 
-  "form": {
-    "key1": "value1", 
-    "key2": "value2", 
-    "key3": "value3"
-  }, 
-  "headers": {
-    "Connection": "close", 
-    "Content-Length": "36", 
-    "Content-Type": "application/x-www-form-urlencoded", 
-    "Expect": "100-continue", 
-    "Host": "www.httpbin.org", 
-    "User-Agent": "Firefox"
-  }, 
-  "json": null, 
-  "origin": "177.207.118.2", 
-  "url": "http://www.httpbin.org/post"
-}
-
-val it : unit = ()
-> 
-
-#+END_SRC
-
-***** Json payload 
-
-#+BEGIN_SRC fsharp 
-#r "bin/FsxTool.dll"
-
-open FsxTool.HttpReq 
-open FsxTool.HttpReq.HttpTypes 
- 
-let  httpPostJson () =    
-    let url = "http://www.httpbin.org/post"
-    let reqParams =  [
-        Method POST;
-        // Headers     [("Accept", "application/json")];
-        ContentType "application/json";
-        UserAgent   "Firefox Fake User Agent";
-        PostPayload "{\"name\": \"John\", \"id\": 2010, \"lang\" : \"es\" }" ;
-        ]
-    printfn "%s" <| Http.requestString url reqParams
-
-
-> httpPostJson () ;;
-{
-  "args": {}, 
-  "data": "{\"name\": \"John\", \"id\": 2010, \"lang\" : \"es\" }", 
-  "files": {}, 
-  "form": {}, 
-  "headers": {
-    "Connection": "close", 
-    "Content-Length": "44", 
-    "Content-Type": "application/json", 
-    "Expect": "100-continue", 
-    "Host": "www.httpbin.org", 
-    "User-Agent": "Firefox Fake User Agent"
-  }, 
-  "json": {
-    "id": 2010, 
-    "lang": "es", 
-    "name": "John"
-  }, 
-  "origin": "177.207.118.2", 
-  "url": "http://www.httpbin.org/post"
-}
-
-val it : unit = ()
-> 
 
 #+END_SRC
