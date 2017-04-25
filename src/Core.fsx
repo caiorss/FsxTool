@@ -100,6 +100,11 @@ module Result =
         | Ok g         -> g x
         | Error _      -> ()
 
+    module Op =
+        let (>>=) ma fn = bind fn ma
+        let (>=+) ma fn = map fn ma 
+
+
 
 module String  =
     open System
@@ -124,6 +129,14 @@ module String  =
     let splitSpace (str: string) =
         splitByChars [| ' '; '\t' |] str
 
+
+    let endsWith suffix (str: string) =
+        str.EndsWith(suffix)
+
+    let startsWith prefix (str: string) =
+        str.StartsWith(prefix)
+
+
     /// Add suffix to string 
     let addPrefix (prefix: string) (str: string) =
         prefix + str
@@ -131,6 +144,16 @@ module String  =
     /// Add suffix to string     
     let addSuffix (suffix: string) (str: string) =
         str + suffix
+
+    let trimSuffix suffix (str: string) =
+        if str.EndsWith(suffix)
+        then str.Substring(0, str.Length - suffix.Length)
+        else str
+
+    let trimPrefix prefix (str: string) =
+        if str.StartsWith(prefix)
+        then str.Substring(prefix.Length)
+        else str 
 
     /// Get regex matches 
     let reMatches expr (text: string) =
