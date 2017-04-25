@@ -1,5 +1,13 @@
 bin/
+packages/
+dist/
 *.exe
 *.dll
 *.pdb
 *.bin
+*.html
+*.zip
+*.tar.gz
+*.mdb
+*.sqlite
+
