@@ -58,6 +58,10 @@ module Date =
     let read2 str =
         Option.get <| parse "yyyy-mm-dd" str
 
+    /// Format date to ISO 8601 format (yyyy-mm-dd).
+    let toString (d: T) =
+        d.ToString("yyyy-MM-dd")
+
     let dayOfWeek (d: DateTime) =
         d.DayOfWeek
 
