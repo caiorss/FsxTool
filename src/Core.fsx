@@ -1,5 +1,6 @@
-namespace FsxTool.Core
 /// Useful extension methods
+namespace FsxTool.Core
+
 
 /// Option extension module
 ///
@@ -7,7 +8,20 @@ module Option =
 
     module Op =
         let (>>=) ma fn = Option.bind fn ma
-        let (>=+) ma fn = Option.map fn ma 
+        let (>=+) ma fn = Option.map fn ma
+
+    open Op
+
+    type MaybeBuilder() =
+        member this.Bind(ma, f) =
+            match ma with
+            | Some(a)    -> f a
+            | _          -> None
+        member this.Delay(f) = f()
+        member this.Return(x) = Some x
+
+    let maybe = new MaybeBuilder()
+
 
     let map2 fn ma mb =
         match ma, mb with
