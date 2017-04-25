@@ -137,46 +137,50 @@ Time manipulation library.
 
 *** Module Date 
 
-| Function       | Singature                               | Description                                         |
-|----------------+-----------------------------------------+-----------------------------------------------------|
-| *Type*         |                                         |                                                     |
-| T              | System.DateTime                         |                                                     |
-|                |                                         |                                                     |
-| *Constructors* |                                         |                                                     |
-| today          | unit -> T                               | Get current date in local time.                     |
-| date           | y:int -> m:int -> d:int -> T            | Create new datetime object.                         |
-| datet          | y:int * m:int * d:int -> T              | Create new datettime object from tuple.             |
-| curDay         | unit -> int                             | Get current day.                                    |
-| curMonth       | unit -> init                            | Get current month.                                  |
-| curYear        | unit -> int                             | Get current year.                                   |
-|                |                                         |                                                     |
-| *Extractors*   |                                         |                                                     |
-| day            | d:T -> int                              | Get date day                                        |
-| month          | d:T -> int                              | Get date month                                      |
-| year           | d:T -> int                              | Get date yar.                                       |
-| dayOfWeek      | d:T -> System.DayOfWeek                 | Get day of week                                     |
-|                |                                         |                                                     |
-| *Operators*    |                                         |                                                     |
-| addDays        | ndays:float -> d:T -> T                 | Add n days to date.                                 |
-| nextDay        | dt:T -> T                               | Increment date by one day.                          |
-| prevDay        | dt:T -> T                               | Decrement date by one day.                          |
-| diff           | d1:T -> d2:T -> T                       | Get the difference between date d1 and d2 (d1 - d2) |
-|                |                                         |                                                     |
-| *Predicates*   |                                         |                                                     |
-| isWeekend      | d:T -> bool                             | Test if date is Saturday or Sunday.                 |
-| isWeekDay      | d:T -> bool                             | Test if ate is not Saturday or Sunday.              |
-| isMonday       | d:T -> bool                             |                                                     |
-| isTuesday      | d:T -> bool                             |                                                     |
-| isWednesday    | d:T -> bool                             |                                                     |
-| isThursday     | d:T -> bool                             |                                                     |
-| isFriday       | d:T -> bool                             |                                                     |
-| isSaturday     | d:T -> bool                             |                                                     |
-| isSunday       | d:T -> bool                             |                                                     |
-|                |                                         |                                                     |
-| *Parsers*      |                                         |                                                     |
-| parse          | format:string -> str:string -> T option | Try parse date. Return None if it fails.            |
-| parrse2        | format:string -> str:string -> T        | Try parse data. Throws exception if it fails.       |
-|                |                                         |                                                     |
+| Function       | Singature                               | Description                                           |
+|----------------+-----------------------------------------+-------------------------------------------------------|
+| *Type*         |                                         |                                                       |
+| T              | System.DateTime                         |                                                       |
+|                |                                         |                                                       |
+| *Constructors* |                                         |                                                       |
+| today          | unit -> T                               | Get current date in local time.                       |
+| date           | y:int -> m:int -> d:int -> T            | Create new datetime object.                           |
+| datet          | y:int * m:int * d:int -> T              | Create new datettime object from tuple.               |
+| curDay         | unit -> int                             | Get current day.                                      |
+| curMonth       | unit -> init                            | Get current month.                                    |
+| curYear        | unit -> int                             | Get current year.                                     |
+|                |                                         |                                                       |
+| *Extractors*   |                                         |                                                       |
+| toTuple        | d:T -> int * int * int                  | Returns tuple with year, month and day.               |
+| day            | d:T -> int                              | Get date day                                          |
+| month          | d:T -> int                              | Get date month                                        |
+| year           | d:T -> int                              | Get date yar.                                         |
+| dayOfWeek      | d:T -> System.DayOfWeek                 | Get day of week                                       |
+|                |                                         |                                                       |
+| *Operators*    |                                         |                                                       |
+| addDays        | ndays:float -> d:T -> T                 | Add n days to date.                                   |
+| nextDay        | dt:T -> T                               | Increment date by one day.                            |
+| prevDay        | dt:T -> T                               | Decrement date by one day.                            |
+| diff           | d1:T -> d2:T -> T                       | Get the difference between date d1 and d2 (d1 - d2)   |
+|                |                                         |                                                       |
+| *Predicates*   |                                         |                                                       |
+| isWeekend      | d:T -> bool                             | Test if date is Saturday or Sunday.                   |
+| isWeekDay      | d:T -> bool                             | Test if ate is not Saturday or Sunday.                |
+| isMonday       | d:T -> bool                             |                                                       |
+| isTuesday      | d:T -> bool                             |                                                       |
+| isWednesday    | d:T -> bool                             |                                                       |
+| isThursday     | d:T -> bool                             |                                                       |
+| isFriday       | d:T -> bool                             |                                                       |
+| isSaturday     | d:T -> bool                             |                                                       |
+| isSunday       | d:T -> bool                             |                                                       |
+|                |                                         |                                                       |
+| *Read / Write* |                                         |                                                       |
+| toString       | T -> string                             | Get date as string with format yyyy-mm-dd (ISO 8601). |
+| read           | str:string -> T option                  | Read date with format yyyy-mm-dd (ISO 8601)           |
+| read2          | str:string -> T                         | Like read, but not safe.                              |
+| parse          | format:string -> str:string -> T option | Try parse date. Return None if it fails.              |
+| parrse2        | format:string -> str:string -> T        | Try parse data. Throws exception if it fails.         |
+|                |                                         |                                                       |
 
 Singaures: 
 
@@ -229,6 +233,312 @@ module Instant = begin
 end
 
 #+END_SRC
+
+
+
+*** Examples 
+
+*Load library* 
+
+#+BEGIN_SRC fsharp
+- #r "bin/FsxTool.dll" ;;
+
+--> Referenced '/home/archbox/Documents/projects/FsxTools.fsharp/bin/FsxTool.dll' (file may be locked by F# Interactive process)
+
+/// Module alias 
+- module Date = FsxTool.Dtime.Date ;;
+> 
+
+#+END_SRC
+
+*Create Date* 
+
+#+BEGIN_SRC fsharp
+
+- Date.today ;;
+val it : (unit -> System.DateTime) 
+> 
+- Date.today() ;;
+val it : System.DateTime =
+  4/25/2017 12:00:00 AM {Date = 4/25/2017 12:00:00 AM;
+                         Day = 25;
+                         DayOfWeek = Tuesday;
+                         DayOfYear = 115;
+                         Hour = 0;
+                         Kind = Local;
+                         Millisecond = 0;
+                         Minute = 0;
+                         Month = 4;
+                         Second = 0;
+                         Ticks = 636286752000000000L;
+                         TimeOfDay = 00:00:00;
+                         Year = 2017;}
+> 
+
+- Date.date ;; 
+val it : (int -> int -> int -> System.DateTime)
+> 
+
+
+- Date.date 2010 10 20 ;;
+val it : System.DateTime =
+  10/20/2010 12:00:00 AM {Date = 10/20/2010 12:00:00 AM;
+                          Day = 20;
+                          DayOfWeek = Wednesday;
+                          DayOfYear = 293;
+                          Hour = 0;
+                          Kind = Unspecified;
+                          Millisecond = 0;
+                          Minute = 0;
+                          Month = 10;
+                          Second = 0;
+                          Ticks = 634231296000000000L;
+                          TimeOfDay = 00:00:00;
+                          Year = 2010;}
+> 
+
+- Date.datet ;;
+val it : (int * int * int -> System.DateTime) 
+
+- Date.datet (2010, 10, 15) ;;
+val it : System.DateTime =
+  10/15/2010 12:00:00 AM {Date = 10/15/2010 12:00:00 AM;
+                          Day = 15;
+                          DayOfWeek = Friday;
+                          DayOfYear = 288;
+                          Hour = 0;
+                          Kind = Unspecified;
+                          Millisecond = 0;
+                          Minute = 0;
+                          Month = 10;
+                          Second = 0;
+                          Ticks = 634226976000000000L;
+                          TimeOfDay = 00:00:00;
+                          Year = 2010;}
+> 
+
+
+
+#+END_SRC
+
+*Extract Date attributes* 
+
+#+BEGIN_SRC fsharp 
+- let d = Date.datet (2010, 10, 15) ;;   
+
+val d : System.DateTime = 10/15/2010 12:00:00 AM
+
+> Date.toTuple d ;;
+val it : int * int * int = (2010, 10, 15)
+> 
+
+> 
+> Date.day d ;;
+val it : int = 15
+> 
+- Date.month d ;;
+val it : int = 10
+> 
+- Date.year d ;;
+val it : int = 2010
+> 
+- 
+- Date.dayOfWeek d ;;
+val it : System.DayOfWeek = Friday {value__ = 5;}
+> 
+- 
+
+#+END_SRC
+
+*Date reading / formating (ISO 8601)*
+
+#+BEGIN_SRC fsharp
+- let m =  "2010-01-21" ;;
+
+> m |> Date.read  ;;
+val it : System.DateTime option =
+  Some 1/21/2010 12:01:00 AM {Date = 1/21/2010 12:00:00 AM;
+                              Day = 21;
+                              DayOfWeek = Thursday;
+                              DayOfYear = 21;
+                              Hour = 0;
+                              Kind = Unspecified;
+                              Millisecond = 0;
+                              Minute = 1;
+                              Month = 1;
+                              Second = 0;
+                              Ticks = 633996288600000000L;
+                              TimeOfDay = 00:01:00;
+                              Year = 2010;}
+
+- m |> Date.read2 ;;        
+val it : System.DateTime =
+  1/21/2010 12:01:00 AM {Date = 1/21/2010 12:00:00 AM;
+                         Day = 21;
+                         DayOfWeek = Thursday;
+                         DayOfYear = 21;
+                         Hour = 0;
+                         Kind = Unspecified;
+                         Millisecond = 0;
+                         Minute = 1;
+                         Month = 1;
+                         Second = 0;
+                         Ticks = 633996288600000000L;
+                         TimeOfDay = 00:01:00;
+                         Year = 2010;}
+> 
+- 
+
+- m |> Date.read2 |> Date.toString ;;
+val it : string = "2010-01-21"
+> 
+- m |> Date.read2 |> Date.toString = m ;;
+val it : bool = true
+> 
+#+END_SRC
+
+*Date Parsing*
+
+#+BEGIN_SRC fsharp 
+- Date.parse2 ;;
+val it : (string -> string -> System.DateTime) 
+
+
+-  let parseYMD = Date.parse2 "yyyy-mm-dd" ;;
+
+val parseYMD : (string -> System.DateTime)
+
+> let d =  parseYMD "2010-10-21"  ;;
+
+val d : System.DateTime = 1/21/2010 12:10:00 AM
+
+> d ;;
+val it : System.DateTime =
+  1/21/2010 12:10:00 AM {Date = 1/21/2010 12:00:00 AM;
+                         Day = 21;
+                         DayOfWeek = Thursday;
+                         DayOfYear = 21;
+                         Hour = 0;
+                         Kind = Unspecified;
+                         Millisecond = 0;
+                         Minute = 10;
+                         Month = 1;
+                         Second = 0;
+                         Ticks = 633996294000000000L;
+                         TimeOfDay = 00:10:00;
+                         Year = 2010;}
+> 
+
+
+- d |> Date.toString ;;
+val it : string = "2010-01-21"
+> 
+- Date.today () |> Date.toString ;;
+val it : string = "2017-04-25"
+> 
+
+
+> 
+- let dlist = [ "2009-01-20" ; "2010-08-20" ; "2011-09-15" ] ;;
+
+val dlist : string list = ["2009-01-20"; "2010-08-20"; "2011-09-15"]
+
+> List.map parseYMD dlist ;;                                   
+val it : System.DateTime list =
+  [1/20/2009 12:01:00 AM {Date = 1/20/2009 12:00:00 AM;
+                          Day = 20;
+                          DayOfWeek = Tuesday;
+                          DayOfYear = 20;
+                          Hour = 0;
+                          Kind = Unspecified;
+                          Millisecond = 0;
+                          Minute = 1;
+                          Month = 1;
+                          Second = 0;
+                          Ticks = 633680064600000000L;
+                          TimeOfDay = 00:01:00;
+                          Year = 2009;};
+   1/20/2010 12:08:00 AM {Date = 1/20/2010 12:00:00 AM;
+                          Day = 20;
+                          DayOfWeek = Wednesday;
+                          DayOfYear = 20;
+                          Hour = 0;
+                          Kind = Unspecified;
+                          Millisecond = 0;
+                          Minute = 8;
+                          Month = 1;
+                          Second = 0;
+                          Ticks = 633995428800000000L;
+                          TimeOfDay = 00:08:00;
+                          Year = 2010;};
+   1/15/2011 12:09:00 AM {Date = 1/15/2011 12:00:00 AM;
+                          Day = 15;
+                          DayOfWeek = Saturday;
+                          DayOfYear = 15;
+                          Hour = 0;
+                          Kind = Unspecified;
+                          Millisecond = 0;
+                          Minute = 9;
+                          Month = 1;
+                          Second = 0;
+                          Ticks = 634306469400000000L;
+                          TimeOfDay = 00:09:00;
+                          Year = 2011;}]
+> 
+
+
+> let parseDMY = Date.parse2 "dd/mm/yyyy"  ;;
+
+val parseDMY : (string -> System.DateTime)
+
+> parseDMY "10/01/2010" ;;
+val it : System.DateTime =
+  1/10/2010 12:01:00 AM {Date = 1/10/2010 12:00:00 AM;
+                         Day = 10;
+                         DayOfWeek = Sunday;
+                         DayOfYear = 10;
+                         Hour = 0;
+                         Kind = Unspecified;
+                         Millisecond = 0;
+                         Minute = 1;
+                         Month = 1;
+                         Second = 0;
+                         Ticks = 633986784600000000L;
+                         TimeOfDay = 00:01:00;
+                         Year = 2010;}
+> 
+
+#+END_SRC
+
+*Date Operations*
+
+#+BEGIN_SRC fsharp 
+> let dt = Date.read2 "2010-10-15" ;;
+
+val dt : System.DateTime = 1/15/2010 12:10:00 AM
+
+- dt |> Date.addDays 20.0 |> Date.toString ;;
+val it : string = "2010-02-04"
+> 
+- dt |> Date.addDays -200.0 |> Date.toString ;;
+val it : string = "2009-06-29"
+> 
+
+- dt |> Date.nextDay |> Date.toString ;;       
+val it : string = "2010-01-16"
+> 
+
+- dt |> Date.prevDay |> Date.toString ;;
+val it : string = "2010-01-14"
+> 
+- Date.diff (Date.read2 "2010-10-15") (Date.read2 "2010-02-04") ;;
+val it : int = 11
+> 
+
+#+END_SRC
+
+
+
 ** FsxTool.Xml - Xml Parsing Combinators 
 *** Functions 
 
@@ -852,7 +1162,6 @@ Module: Directory
 | getFilesAbs | path:string -> seq<string>               | Get directory files with absolute path |
 | getFilesExt | path:string -> ext:string -> seq<string> | Get all files with given extension     |
 |             |                                          |                                        |
-
 
 ** TODO FsxTool.HttpReq - Http Client Library 
 *** Types 
