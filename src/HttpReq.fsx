@@ -85,7 +85,7 @@ module Http =
                   headers
         req 
 
-    let setPropSingle prop (req: HttpWebRequest) =
+    let private setPropSingle prop (req: HttpWebRequest) =
         match prop with
         | Method m      -> setHttpMethod m req
         | ContentType c -> setContentType c req
