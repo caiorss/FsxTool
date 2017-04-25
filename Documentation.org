@@ -229,27 +229,27 @@ module Instant = begin
 end
 
 #+END_SRC
-** FsxTool.xml - Xml Parsing Combinators 
+** FsxTool.Xml - Xml Parsing Combinators 
 *** Functions 
 
 Module Doc:
 
-| Function | Signature       |                                         |
-|----------+-----------------+-----------------------------------------|
-| Type T   | XmlDocument     |                                         |
-|          |                 |                                         |
-| load     | string -> T     | Get Xml document from string.           |
-| loadUri  | string -> T     | Get Xml document from URI, file or URL. |
-|          |                 |                                         |
-| root     | T -> XmlNode    | Get Xml root element from XmlDocument.  |
-| toString | T -> string     | Print XmlDocument to string.            |
-| show     | T -> unit       | Print Xml to console.                   |
-|          |                 |                                         |
-|          |                 |                                         |
+| Function | Signature    | Description                             |
+|----------+--------------+-----------------------------------------|
+| Type T   | XmlDocument  |                                         |
+|          |              |                                         |
+| load     | string -> T  | Get Xml document from string.           |
+| loadUri  | string -> T  | Get Xml document from URI, file or URL. |
+|          |              |                                         |
+| root     | T -> XmlNode | Get Xml root element from XmlDocument.  |
+| toString | T -> string  | Print XmlDocument to string.            |
+| show     | T -> unit    | Print Xml to console.                   |
+|          |              |                                         |
+|          |              |                                         |
 
 Module Node: 
 
-| Function              | Signature                                     |                                                         |
+| Function              | Signature                                     | Description                                             |
 |-----------------------+-----------------------------------------------+---------------------------------------------------------|
 | Type T                | XmlNode                                       |                                                         |
 |                       |                                               |                                                         |
@@ -281,7 +281,6 @@ Module Node:
 | showStructNs          | T -> unit                                     | Show xml node structure with namespace URI of each node |
 |                       |                                               |                                                         |
 |                       |                                               |                                                         |
-
 
 *** Examples 
 **** Example 1 - Parse RSS File 
@@ -811,6 +810,49 @@ val dispRSSItem : item:RSSItem -> unit
 
 
 #+END_SRC
+
+** FsxTool.Sys 
+
+Module: Path - Path manipulation 
+
+| Function     | Signature                                       | Description             |
+|--------------+-------------------------------------------------+-------------------------|
+|              |                                                 |                         |
+| join         | string list -> string                           | Join a list of paths    |
+| combine      | string -> string -> string                      | Combine two paths       |
+| getDirectory | string -> string                                | Get directory from path |
+| getFileName  | string -> string                                | Get file name form path |
+| changeExt    | (extension: string) -> (path: string) -> string | Change path extension   |
+|              |                                                 |                         |
+
+Module: File
+
+| Function     | Signature                                       | Description               |
+|--------------+-------------------------------------------------+---------------------------|
+|              |                                                 |                           |
+| delete       | string -> unit                                  | Delete file               |
+| exists       | string -> bool                                  | Check if file exists.     |
+| move         | (srcFile: string) -> (destFile: string) -> unit | Move file                 |
+| copy         | (srcFile: string) -> (destFile: string) -> unit | Copy file                 |
+| moveTo       | (directory: string) -> (file: string) -> unit   | Move file to directory    |
+| copyTo       | (directory: string) -> (file: string) -> unit   | Copy file to directory    |
+|              |                                                 |                           |
+| readFile     | (file: string) -> string                        | Read all file text        |
+| readAllLines | (file: string) -> string []                     | Read all file lines       |
+| readAllBytes | (file: string) -> bytes []                      | Read all bytes from file. |
+| writeFile    | (file: string) -> (contents: string) -> unit    | Write contents to file    |
+|              |                                                 |                           |
+
+Module: Directory 
+
+| Function    | Signature                                | Description                            |
+|-------------+------------------------------------------+----------------------------------------|
+|             |                                          |                                        |
+| getFiles    | path:string -> seq<string>               | Get directory files                    |
+| getFilesAbs | path:string -> seq<string>               | Get directory files with absolute path |
+| getFilesExt | path:string -> ext:string -> seq<string> | Get all files with given extension     |
+|             |                                          |                                        |
+
 
 ** TODO FsxTool.HttpReq - Http Client Library 
 *** Types 
