@@ -82,6 +82,43 @@ val it : string list = ["hello-suf"; "world-suf"; "fsharp-suf"; "csharp-suf"]
 **** Overview 
 
 Option module extension. Provides additional Option combinators.
+**** Functions 
+
+Module: Option - Option module extension.
+
+| Function | Singature                                                  | Description |
+|----------+------------------------------------------------------------+-------------|
+| map2     | fn:('a -> 'b -> 'c) -> 'a option -> 'b option -> 'c option |             |
+| value    | 'a -> 'a option -> 'a                                      |             |
+| both     | 'a option -> 'b option -> ('a * 'b) option                 |             |
+| tryWith  | (unit -> 'a) -> 'a option                                  |             |
+| filter   | ('a -> bool) -> 'a option -> 'a option                     |             |
+| sequence | ('a option) list -> ('a list) option                       |             |
+|          |                                                            |             |
+|          |                                                            |             |
+
+Module: String - String manipulation.
+
+| Function   | Singature                                         | Description                               |
+|------------+---------------------------------------------------+-------------------------------------------|
+| toString   | obj -> string                                     | Get object as string                      |
+| join       | prefix:string -> strlist:seq<string> -> string    | Join sequence of string with a separator. |
+| splitLines | string -> string []                               |                                           |
+| splitSpace | string -> string []                               |                                           |
+|            |                                                   |                                           |
+|            |                                                   |                                           |
+| startsWith | prefix:string -> str:string -> bool               |                                           |
+| endsWith   | suffix:string -> str:string -> bool               |                                           |
+| addPrefix  | prefix:string -> str:string -> string             |                                           |
+| addSuffix  | suffix:string -> str:string -> string             |                                           |
+| trimPrefix | prefix:string -> str:string -> string             |                                           |
+| trimSuffix | suffix:string -> str:string -> string             |                                           |
+| reReplace  | expr:string -> rep:string -> str:string -> string |                                           |
+|            |                                                   |                                           |
+|            |                                                   |                                           |
+
+
+
 **** map2
 **** value 
 
@@ -237,8 +274,6 @@ module Instant = begin
 end
 
 #+END_SRC
-
-
 
 *** Examples 
 
