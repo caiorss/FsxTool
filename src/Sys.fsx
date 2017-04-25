@@ -3,9 +3,11 @@ module FsxTool.Sys
 
 module Path =
 
+    /// Join a list of paths
     let join pathList =
         System.IO.Path.Combine(Array.ofList pathList)
 
+    /// Combine two paths     
     let combine path1 path2 =
         System.IO.Path.Combine(path1, path2)
 
@@ -62,24 +64,21 @@ module File =
 module Directory =
 
     /// Get all directory files with absolute path 
-    let listDirectoryA path =
+    let getFilesAbs (path: string) =
         let dir = new System.IO.DirectoryInfo(path)
-        in Array.map (fun (x: System.IO.FileInfo) -> x.FullName)  (dir.GetFiles ())
+        dir.GetFiles() |> Seq.ofArray
+                       |> Seq.map (fun (x: System.IO.FileInfo) -> x.FullName)  
 
     /// Get all directory files without absolute path     
-    let listDirectory path =
+    let getFiles path =
         let dir = new System.IO.DirectoryInfo(path)
-        in Array.map (fun (x: System.IO.FileInfo) -> x.Name)  (dir.GetFiles ())
+        dir.GetFiles() |> Seq.ofArray
 
     /// Get all directory files with given extension 
-    let listDirectoryExt path ext =
+    let getFilesExt path ext =
         System.IO.Directory.GetFiles(path, ext)
         |> Seq.ofArray
         
-    /// Change file name extension        
-    let changeExtension ext filename =
-         System.IO.Path.ChangeExtension (filename, ext)
-
     let exec (command: string) (args: string option) =
         let p = match args with
                 | None   ->   System.Diagnostics.Process.Start (command)
