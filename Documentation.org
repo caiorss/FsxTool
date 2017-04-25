@@ -241,11 +241,47 @@ Module Doc:
 | load     | string -> T     | Get Xml document from string.           |
 | loadUri  | string -> T     | Get Xml document from URI, file or URL. |
 |          |                 |                                         |
-| root     | T -> XmlElement | Get Xml root element from XmlDocument.  |
+| root     | T -> XmlNode    | Get Xml root element from XmlDocument.  |
 | toString | T -> string     | Print XmlDocument to string.            |
 | show     | T -> unit       | Print Xml to console.                   |
 |          |                 |                                         |
 |          |                 |                                         |
+
+Module Node: 
+
+| Function              | Signature                                     |                                                         |
+|-----------------------+-----------------------------------------------+---------------------------------------------------------|
+| Type T                | XmlNode                                       |                                                         |
+|                       |                                               |                                                         |
+|                       |                                               |                                                         |
+| value                 | T -> string                                   | Get node value                                          |
+| name                  | T -> string                                   | Get node tag name                                       |
+| innerText             | T -> string                                   | Get node innerText                                      |
+|                       |                                               |                                                         |
+| attrv                 | (attr: string) -> (node: T) -> string option  | Get node attribute value.                               |
+| attrv2                | (attr: string) -> (node: T) -> string         | Like attrv, but not safe.                               |
+|                       |                                               |                                                         |
+| attributes            | T ->  seq<string * string>                    | Return all node attributes.                             |
+| attrNames             | T ->  seq<string>                             | Get all node attributes                                 |
+|                       |                                               |                                                         |
+| childNodes            | T -> seq<T>                                   | Get child nodes.                                        |
+| childNodesNoComment   | T -> seq<T>                                   | Get all child nodes ignoring comment nodes              |
+| getNodesByTagName     | (tagName: string) -> (node: T) -> seq<T>      | Get all nodes with a given tag name.                    |
+| getInnerTextByTagName | (tagName: string) -> (node: T) -> seq<string> | Get all text form child nodes with given tag name.      |
+| nth                   | (n: int) -> T -> T                            | Get nth child node                                      |
+| first                 | T -> T                                        | Get first child node                                    |
+|                       |                                               |                                                         |
+| getNamespaces         | T -> (string * string) list                   | Get node namespaces.                                    |
+|                       |                                               |                                                         |
+| toString              | T -> string                                   | Get node Xml string                                     |
+|                       |                                               |                                                         |
+| show                  | T -> unit                                     | Print node in Xml format.                               |
+| showStruct            | T -> unit                                     | Show node Xml tags heirarchy                            |
+| showStructAttr        | T -> unit                                     | Show xml node structure with attributes of each node    |
+| showStructNs          | T -> unit                                     | Show xml node structure with namespace URI of each node |
+|                       |                                               |                                                         |
+|                       |                                               |                                                         |
+
 
 *** Examples 
 **** Example 1 - Parse RSS File 
