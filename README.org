@@ -1,4 +1,37 @@
 * FsxTools
 ** Description 
 ** Build
+** Whishlist 
 
+ - [ ] Facilities for data extraction.
+   - [ ] XML parsing and data extraction 
+   - [ ] Html parsing and data data extraction
+   - [ ] Csv parsing and extraction 
+
+ - [ ] Functional programming extensions
+   - [ ] Option module extensions 
+   - [ ] Result module extensions
+
+ - 
+
+ - 
+** Brainstorm 
+
+ - Minimal functional layer over .NET API to make more functional
+   programming friendly and (|>) pipe friendly.
+
+ - Make data extraction easier providing combinators. 
+
+ - Combinators to parse XML
+
+ - Combinators to parse Csv
+
+ - Combinators to extract Html - Layer over HtmlAgility Pack
+
+ - Unit Tests like Haskell HUnit package with only functions, no classes.
+
+ - Date time manipulation, date time DSL, date time parsing ... 
+
+ - 
+
+ - 
