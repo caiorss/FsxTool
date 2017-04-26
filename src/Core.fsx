@@ -194,6 +194,28 @@ module String  =
         rgx.Replace(text, rep)
 
     
+/// Mutable reference combinators
+module Ref =
+
+    type T<'a> = 'a ref
+
+    /// Create mutable reference
+    let create a = ref a
+
+    /// Get value of mutable reference
+    let get (ra: T<'a>): 'a = !ra
+
+    /// Set mutable reference with a value.
+    let set (ra: T<'a>) (value: 'a) = ra := value
+
+    /// Apply function to mutable reference but does not change it.
+    let apply (fn: 'a -> 'b) (ra: T<'a>) = fn !ra
+
+    /// Apply function to mutable reference and set it to this new value.
+    let update (fn: 'a -> 'a) (ra: T<'a>) = ra := fn !ra
+
+
+
         
     // let split ch (str: string) =   
     
