@@ -149,6 +149,51 @@ module Date =
     let fromUnixTimestamp tstamp =
         unixZeroDate.AddSeconds(tstamp)
 
+module DateYMD =
+    open System
+
+    type Date = {
+                 Y: int
+               ; M: int
+               ; D: int
+                 }
+
+    let date y m d =
+        {Y = y; M = m ; D = d }
+
+    let dtimeToDate (dt: DateTime) =
+        {Y = dt.Year; M = dt.Month; D = dt.Day }
+
+    let dateToDtime (date: Date) =
+        new DateTime(date.Y, date.M, date.D)
+
+    let day (date: Date) = date.D
+
+    let month (date: Date) = date.M
+
+    let year (date: Date) = date.Y
+
+    let addDays ndays (date: Date) =
+        let d = dateToDtime date
+        dtimeToDate <| d.AddDays ndays
+
+    let diff (d1: Date) (d2: Date) =
+        let dt = dateToDtime d1 - dateToDtime d2
+        dt.Days
+
+    let today () =
+        dtimeToDate DateTime.Today
+
+    let nextDay (date: Date) =
+        addDays 1.0 date
+
+    let prevDay (date: Date) =
+        addDays (-1.0) date
+
+    let toString (date: Date) =
+        let d = dateToDtime date
+        d.ToString("yyyy-mm-dd")
+
 
 
 
