@@ -45,6 +45,11 @@ module TimeZone =
         TimeZoneInfo.GetSystemTimeZones()
         |> Seq.map (fun tz -> tz.Id, tz.StandardName, tz.BaseUtcOffset.Hours)
 
+    /// Print all system timezones
+    let showTimeZones () =
+        TimeZoneInfo.GetSystemTimeZones()
+        |> Seq.iter (fun tz -> printfn "(UTC %A) %s" tz.BaseUtcOffset tz.Id)
+
 
 module Date =
 
