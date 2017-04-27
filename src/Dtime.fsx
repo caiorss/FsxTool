@@ -6,6 +6,15 @@ module TimeZone =
 
     type T = TimeZone
 
+    let getName (tz: TimeZoneInfo) =
+        tz.Id
+
+    /// Get local TimeZone
+    let getLocal () = TimeZoneInfo.Local
+
+    /// Get UTC offset
+    let getLocalOffset () =
+        TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow).TotalHours
 
     /// Timezone abbreviations
     let private tzAbrev tzname =
