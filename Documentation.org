@@ -368,6 +368,46 @@ val it : int = 2017
 
 #+END_SRC
 
+*** TODO Module Dtime
+**** Overview
+**** Functions
+**** Examples
+
+Example: Show the current time at different Time Zones
+
+#+BEGIN_SRC fsharp
+#r "bin/FsxTool.dll"
+
+module Dt = FsxTool.Dtime.Dtime ;;
+module Tz = FsxTool.Dtime.TimeZone ;;
+
+
+let displayTime (tzones: System.TimeZoneInfo list) (time: System.DateTime) =
+    tzones |> List.iter (fun tz ->
+                         let t = Dt.utcToTz tz time
+                         printfn "%s\t\t%A " tz.Id t
+
+                         )
+
+let now = Dt.nowUTC()
+
+let tzList = List.map Tz.getTimeZone ["America/Recife"; "lnd" ; "nyc"; "tky"; "utc"]
+
+displayTime (Tz.getLocal()::tzList) now
+#+END_SRC
+
+Output:
+
+#+BEGIN_SRC text
+$ fsharpi test_time.fsx
+America/Recife		4/27/2017 7:03:08 PM
+America/Recife		4/27/2017 7:03:08 PM
+Europe/London		4/27/2017 11:03:08 PM
+America/New_York		4/27/2017 6:03:08 PM
+Asia/Tokyo		4/28/2017 7:03:08 AM
+UTC		4/27/2017 10:03:08 PM
+#+END_SRC
+
 *** Examples
 
 *Load library*
