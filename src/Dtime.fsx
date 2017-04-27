@@ -207,14 +207,14 @@ module DateYMD =
         d.ToString("yyyy-mm-dd")
 
     let isWeekend (date: Date) =
-        let d = dateToDtime d
+        let d = dateToDtime date
         match d.DayOfWeek with
         | DayOfWeek.Saturday -> true
         | DayOfWeek.Sunday   -> true
         | _                  -> false
 
-    let isWeekDay (d: Date) =
-        let d = dateToDtime d
+    let isWeekDay (date: Date) =
+        let d = dateToDtime date
         match d.DayOfWeek with
         | DayOfWeek.Saturday -> false
         | DayOfWeek.Sunday   -> false
