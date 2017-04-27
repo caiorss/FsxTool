@@ -173,6 +173,11 @@ module DateYMD =
 
     let year (date: Date) = date.Y
 
+    /// Get day of week
+    let dayOfWeek (date: Date) =
+        let d = dateToDtime date
+        d.DayOfWeek
+
     let addDays ndays (date: Date) =
         let d = dateToDtime date
         dtimeToDate <| d.AddDays ndays
