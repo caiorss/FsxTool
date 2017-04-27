@@ -269,11 +269,52 @@ module DateYMD =
         | DayOfWeek.Sunday   -> false
         | _                  -> true
 
+/// Date and Time with Timezone
+module Dtime =
+    type T = DateTime
 
-    module Instant =
-        let now () = DateTime.Now
+    let date y m d =
+        new DateTime(y, m, d)
 
+    let dtimeUTC year month day hour min sec =
+        new DateTime(year, month, day, hour, min, sec, DateTimeKind.Utc)
+
+
+    /// Convert Date-time from UTC to a Time zone.
+    let utcToTz (tz: TimeZoneInfo) (dtimeUTC: DateTime) =
+        TimeZoneInfo.ConvertTimeFromUtc(dtimeUTC, tz)
+
+    /// Convert Date-Time at some timezone to UTC
+    let tzToUtc (tz: TimeZoneInfo) (dtime: DateTime) =
+        TimeZoneInfo.ConvertTimeToUtc(dtime, tz)
+
+    /// Get current local Date-time
+    let now () = DateTime.Now
+
+    /// Get current Date-time in UTC
+    let nowUTC() = DateTime.UtcNow
+
+    /// Get current time at some Time zone
+    let nowTz (tz: TimeZoneInfo) =
+        utcToTz tz DateTime.UtcNow
+
+    /// Format date time to Local time with Timezone Offset (ISO 8601)
+    /// Example:
+    ///
+    ///   > module DT = FsxTool.Dtime.Dtime
+    ///   > DT.now() |> DT.toIso8601 ;;
+    ///   val it : string = "2017-04-27T17:57:24.9927160-03:00"
+    ///
+    /// It means 17:57 at current timezone with -3:00 UTC offset.
+    /// The UTC time is 17:57 - (-3:00) = 20:57
+    ///
+    let toIso8601(dt: T) =
+        let offset = new DateTimeOffset(dt, TimeZoneInfo.Local.GetUtcOffset(dt))
+        offset.ToString("o")
     
+
+
+
 
 
 // let d = date (2012, 1, 20)
