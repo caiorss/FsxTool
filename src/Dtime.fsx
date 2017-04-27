@@ -158,19 +158,25 @@ module DateYMD =
                ; D: int
                  }
 
+    /// Create a date
     let date y m d =
         {Y = y; M = m ; D = d }
 
+    /// Convert DateTime to Date
     let dtimeToDate (dt: DateTime) =
         {Y = dt.Year; M = dt.Month; D = dt.Day }
 
+    /// Convert Date to DateTime
     let dateToDtime (date: Date) =
         new DateTime(date.Y, date.M, date.D)
 
+    /// Get day of a Date
     let day (date: Date) = date.D
 
+    /// Get month of Date
     let month (date: Date) = date.M
 
+    /// Get year of Date
     let year (date: Date) = date.Y
 
     /// Get day of week
@@ -182,6 +188,7 @@ module DateYMD =
         let d = dateToDtime date
         dtimeToDate <| d.AddDays ndays
 
+    /// Subtracts two dates d1 and d2 (d1 - d2)
     let diff (d1: Date) (d2: Date) =
         let dt = dateToDtime d1 - dateToDtime d2
         dt.Days
