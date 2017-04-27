@@ -199,7 +199,19 @@ module DateYMD =
         let d = dateToDtime date
         d.ToString("yyyy-mm-dd")
 
+    let isWeekend (date: Date) =
+        let d = dateToDtime d
+        match d.DayOfWeek with
+        | DayOfWeek.Saturday -> true
+        | DayOfWeek.Sunday   -> true
+        | _                  -> false
 
+    let isWeekDay (d: Date) =
+        let d = dateToDtime d
+        match d.DayOfWeek with
+        | DayOfWeek.Saturday -> false
+        | DayOfWeek.Sunday   -> false
+        | _                  -> true
 
 
     module Instant =
