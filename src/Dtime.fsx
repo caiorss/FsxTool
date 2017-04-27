@@ -6,9 +6,6 @@ module TimeZone =
 
     type T = TimeZone
 
-    /// Get current timezone
-    let getCurrentTimezone() =
-        TimeZone.CurrentTimeZone
 
     /// Timezone abbreviations
     let private tzAbrev tzname =
