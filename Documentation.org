@@ -275,28 +275,121 @@ end
 
 #+END_SRC
 
-*** Examples 
+*** Module DateYMD
 
-*Load library* 
+Module: *FsxTool.Dtime.Date*
+
+Local date manipulation combinators.
+
+
+| Function    | Singature                       | Description |
+|-------------+---------------------------------+-------------|
+| _Type_      |                                 |             |
+| Date        | {Y: int; M: int; D: int}        |             |
+|             |                                 |             |
+| _Functions_ |                                 |             |
+|             |                                 |             |
+| date        | y:int -> m:int -> d:int -> Date |             |
+| today       | unit -> Date                    |             |
+|             |                                 |             |
+| dtimeToDate | dt:DateTime -> Date             |             |
+| dateToDtime | date:Date -> DateTime           |             |
+|             |                                 |             |
+| day         | Date -> int                     |             |
+| month       | Date -> int                     |             |
+| year        | Date -> int                     |             |
+| dayOfWeek   | Date -> DayOfWeek               |             |
+|             |                                 |             |
+| addDays     | ndays:float -> Date -> Date     |             |
+| diff        | d1:Date -> d2:Date -> int       |             |
+|             |                                 |             |
+| toString    | Date -> string                  |             |
+|             |                                 |             |
+|-------------+---------------------------------+-------------|
+
+
+Examples:
+
+#+BEGIN_SRC fsharp
+$ fsharpi -r:bin/FsxTool.dll
+
+/// Create a date
+
+- module D = FsxTool.Dtime.DateYMD ;;
+>
+
+- D.today () ;;
+val it : FsxTool.Dtime.DateYMD.Date = {Y = 2017;
+                                       M = 4;
+                                       D = 27;}
+>
+- D.today () |> D.nextDay ;;
+val it : FsxTool.Dtime.DateYMD.Date = {Y = 2017;
+                                       M = 4;
+                                       D = 28;}
+>
+- D.today () |> D.addDays 10.0 ;;
+val it : FsxTool.Dtime.DateYMD.Date = {Y = 2017;
+                                       M = 5;
+                                       D = 7;}
+>
+- D.today () |> D.month ;;
+val it : int = 4
+>
+- D.today () |> D.year ;;
+val it : int = 2017
+>
+- D.today () |> D.day ;;
+val it : int = 27
+>
+
+> D.today() |> D.dayOfWeek ;;
+val it : System.DayOfWeek = Thursday {value__ = 4;}
+>
+
+- D.today() |> D.nextDay |> D.dayOfWeek ;;
+val it : System.DayOfWeek = Friday {value__ = 5;}
+>
+
+
+- let d = D.today() |> D.nextDay ;;
+
+val d : FsxTool.Dtime.DateYMD.Date = {Y = 2017;
+                                      M = 4;
+                                      D = 28;}
+
+- d.D ;;
+val it : int = 28
+> d.M ;;
+val it : int = 4
+> d.Y ;;
+val it : int = 2017
+>
+
+#+END_SRC
+
+*** Examples
+
+*Load library*
 
 #+BEGIN_SRC fsharp
 - #r "bin/FsxTool.dll" ;;
 
 --> Referenced '/home/archbox/Documents/projects/FsxTools.fsharp/bin/FsxTool.dll' (file may be locked by F# Interactive process)
 
-/// Module alias 
+/// Module alias
 - module Date = FsxTool.Dtime.Date ;;
-> 
+>
 
 #+END_SRC
 
-*Create Date* 
+*Create Date*
 
 #+BEGIN_SRC fsharp
 
 - Date.today ;;
-val it : (unit -> System.DateTime) 
-> 
+val it : (unit -> System.DateTime)
+>
 - Date.today() ;;
 val it : System.DateTime =
   4/25/2017 12:00:00 AM {Date = 4/25/2017 12:00:00 AM;
