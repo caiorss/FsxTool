@@ -2,6 +2,50 @@ namespace FsxTool.Dtime
 
 open System
 
+module TimeZone =
+
+    type T = TimeZone
+
+    /// Get current timezone
+    let getCurrentTimezone() =
+        TimeZone.CurrentTimeZone
+
+    /// Timezone abbreviations
+    let private tzAbrev tzname =
+        match tzname with
+        | "utc" | "UTC" -> "UTC"
+        | "gmt" | "GMT" -> "GMT"
+        | "nyc"         -> "America/New_York"
+        | "chi"         -> "America/Chicago"
+        | "sp"          -> "America/Sao_Paulo"
+        | "lnd"         -> "Europe/London"
+        | "hkg"         -> "Asia/Hong_Kong"
+        | "tky"         -> "Asia/Tokyo"
+        | _             -> tzname
+
+    /// Get a timezone by name. Throws exception if the name is invalid.
+    let getTimeZone (tzname: string) =
+        TimeZoneInfo.FindSystemTimeZoneById(tzAbrev tzname)
+
+    /// Find a timezone by name, returning None if it is not found.
+    let findTimeZone (tzname: string) =
+        try Some <| TimeZoneInfo.FindSystemTimeZoneById(tzAbrev tzname)
+        with
+            :? System.TimeZoneNotFoundException
+               -> None
+
+    let getUtcOffset (tz: T) =
+        tz.GetUtcOffset(DateTime.Now)
+
+    /// Get all system timezones
+    let getTimeZones () =
+        TimeZoneInfo.GetSystemTimeZones()
+
+    let getTimeZonesInfo () =
+        TimeZoneInfo.GetSystemTimeZones()
+        |> Seq.map (fun tz -> tz.Id, tz.StandardName, tz.BaseUtcOffset.Hours)
+
+
 module Date =
 
     type T = DateTime
