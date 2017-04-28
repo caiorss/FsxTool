@@ -124,13 +124,13 @@ module Http =
         reader.Close ()
         output 
 
-
-    let request (url: string) propList =
-        let req = WebRequest.Create(url) :?> HttpWebRequest
+    let request (url: string) queryParams propList =
+        let req = addParams url queryParams |> WebRequest.Create
+                                            :?> HttpWebRequest
         setProp propList req 
 
-    let requestString (url: string) propList =
-        let req = request url propList
+    let requestString (url: string) queryParams propList =
+        let req = request url queryParams propList
         getResponseString req
 
 
