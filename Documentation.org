@@ -1601,3 +1601,45 @@ val dispRSSItem : item:RSSItem -> unit
 
 
 #+END_SRC
+* .NET Documentation
+** Date Time
+
+ - [[https://msdn.microsoft.com/en-us/library/system.timezoneinfo.converttimefromutc(v=vs.110).aspx][TimeZoneInfo.ConvertTimeFromUtc Method (DateTime, TimeZoneInfo) (System)]]
+
+ - [[https://msdn.microsoft.com/en-us/library/system.timezoneinfo.converttimetoutc(v=vs.110).aspx][TimeZoneInfo.ConvertTimeToUtc Method (System)]]
+
+ - [[http://stackoverflow.com/questions/2548235/convert-utc-datetime-to-another-time-zone][c# - Convert UTC DateTime to another Time Zone - Stack Overflow]]
+
+ - [[http://stackoverflow.com/questions/179940/convert-utc-gmt-time-to-local-time][c# - Convert UTC/GMT time to local time - Stack Overflow]]
+
+ - [[https://softwareengineering.stackexchange.com/questions/209421/best-practice-to-store-datetime-based-on-timezone][c# - Best practice to store DateTime based on TimeZone - Software Engineering Stack Exchange]]
+
+ - [[http://stackoverflow.com/questions/4331189/datetime-vs-datetimeoffset][c# - DateTime vs DateTimeOffset - Stack Overflow]]
+
+ - [[https://msdn.microsoft.com/en-us/library/system.datetimeoffset(v=vs.110).aspx][DateTimeOffset Structure (System)]]
+
+ - [[https://blog.cdemi.io/time-zones-and-daylight-savings-in-your-infrastructure-and-applications/][Time Zones (and DST) in your Infrastructure and Applications]]
+
+
+*.NET DateTime API Summary*
+
+ - [[http://www.extensionmethod.net/csharp/datetime][All c# extension methods for datetime]]
+
+ - [[https://gist.github.com/cbertolasio/5149900][C# date time helper for parsing "date + time + timezone offset in minutes" into the date that "I" want... ## the basic premise is that... - the user will pick a date using a date picker - the user will pick a time using a time picker - the moment js library will calculate the users timezone offset in minutes - based on their current browser setting ## Give all that - I need to take all this data and return a real DateTimeOffset or DateTime struct & this needs to work for standard, non-standard, and UTC time zones · GitHub]]
+
+*Misc*
+
+ - [[https://www.cl.cam.ac.uk/~mgk25/iso-time.html][International standard date and time notation]] (ISO 8601)
+
+ - [[https://en.wikipedia.org/wiki/List_of_time_zone_abbreviations][List of time zone abbreviations - Wikipedia]]
+
+
+*Time of Day (hour-minute-second) / LocalTime*
+
+ - [[https://msdn.microsoft.com/en-us/library/system.datetime.timeofday(v=vs.110).aspx][DateTime.TimeOfDay Property (System)]]
+
+ - [[http://stackoverflow.com/questions/2037283/how-do-i-represent-a-time-only-value-in-net][c# - How do I represent a time only value in .NET? - Stack Overflow]]
+
+ - [[http://stackoverflow.com/questions/296920/how-do-you-get-the-current-time-of-day][c# - How do you get the current time of day? - Stack Overflow]]
+
+ - [[http://www.techotopia.com/index.php/Working_with_Dates_and_Times_in_C_Sharp][Working with Dates and Times in C Sharp - Techotopia]]
