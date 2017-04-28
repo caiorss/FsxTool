@@ -282,9 +282,11 @@ module Dtime =
     let date y m d =
         new DateTime(y, m, d)
 
+    let dtime year month day hour min sec =
+        new DateTime(year, month, day, hour, min, sec)
+
     let dtimeUTC year month day hour min sec =
         new DateTime(year, month, day, hour, min, sec, DateTimeKind.Utc)
-
 
     /// Convert Date-time from UTC to a Time zone.
     let utcToTz (tz: TimeZoneInfo) (dtimeUTC: DateTime) =
@@ -303,6 +305,30 @@ module Dtime =
     /// Get current time at some Time zone
     let nowTz (tz: TimeZoneInfo) =
         utcToTz tz DateTime.UtcNow
+
+    let timeOfDay (d: DateTime) =
+        d.TimeOfDay
+
+    /// Represents a time of day without a specific date.
+    /// hour in 24h format.
+    let time hour min sec =
+        new TimeSpan(hour, min, sec)
+
+    /// Get today date plus time of day
+    let at hour min sec =
+        let ts = TimeSpan(hour, min, sec)
+        DateTime.Today + ts
+
+    let dateAt (date: DateTime) (time: TimeSpan) =
+        date + time
+
+    let private unixZeroDate = new DateTime(1970, 1, 1)
+
+    let toUnixTimestamp (dtime: DateTime) =
+        let diff = dtime - unixZeroDate
+        Convert.ToInt64 diff.TotalSeconds
+
+
 
     /// Format date time to Local time with Timezone Offset (ISO 8601)
     /// Example:
