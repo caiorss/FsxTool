@@ -1,11 +1,11 @@
 #+TITLE: FsxTool Documentation
 #+DESCRIPTION: FsxTool library documentation and examples.
-#+STARTUP: 
+#+STARTUP:
 
-* Documentation
-** Overview 
+* Library Documentation
+** Overview
 
-Package Namespaces 
+Package Namespaces
 
  - FsxtTool.Core
    - F# extension module
