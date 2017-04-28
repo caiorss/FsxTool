@@ -33,7 +33,15 @@ module HttpTypes =
 ///     
 module Http =
 
-    open HttpTypes 
+    open HttpTypes
+
+    /// Add query parameters to URL
+    let addParams (url: string) queryParams =
+        let uribuilder = new UriBuilder(url)
+        let query = HttpUtility.ParseQueryString(uribuilder.Query)
+        queryParams |> List.iter (fun (k, v) -> query.Add(k, v))
+        uribuilder.Query <- query.ToString()
+        uribuilder.ToString()
     
     let private encodePostParameters parameters =
 
