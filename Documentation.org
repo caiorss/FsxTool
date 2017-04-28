@@ -372,8 +372,9 @@ val it : int = 2017
 **** Overview
 **** Functions
 **** Examples
+***** Example 1
 
-Example: Show the current time at different Time Zones
+Show the current time at different Time Zones
 
 #+BEGIN_SRC fsharp
 #r "bin/FsxTool.dll"
@@ -406,6 +407,108 @@ Europe/London		4/27/2017 11:03:08 PM
 America/New_York		4/27/2017 6:03:08 PM
 Asia/Tokyo		4/28/2017 7:03:08 AM
 UTC		4/27/2017 10:03:08 PM
+#+END_SRC
+
+***** Example 2
+
+Get current time at time zones.
+
+#+BEGIN_SRC fsharp
+$ fsharpi -r:bin/FsxTool.dll
+
+> module Dt = FsxTool.Dtime.Dtime ;;
+>
+
+/// Get current time at Amsterdam
+- Tz.getTimeZone "Europe/Amsterdam" |> Dt.nowTz ;;
+val it : System.DateTime = 4/28/2017 4:50:14 AM {Date = 4/28/2017 12:00:00 AM;
+                                                 Day = 28;
+                                                 DayOfWeek = Friday;
+                                                 DayOfYear = 118;
+                                                 Hour = 4;
+                                                 Kind = Unspecified;
+                                                 Millisecond = 329;
+                                                 Minute = 50;
+                                                 Month = 4;
+                                                 Second = 14;
+                                                 Ticks = 636289518143290620L;
+                                                 TimeOfDay = 04:50:14.3290620;
+                                                 Year = 2017;}
+
+/// Get current time at New York
+
+// Not safe
+- Tz.getTimeZone "New York" |> Dt.nowTz ;;
+System.TimeZoneNotFoundException: Exception of type 'System.TimeZoneNotFoundException' was thrown.
+
+- Tz.findTimeZone "New York" ;;
+val it : System.TimeZoneInfo option = None
+>
+
+> Tz.findTimeZone "America/New_York" ;;
+val it : System.TimeZoneInfo option =
+  Some America/New_York {BaseUtcOffset = -05:00:00;
+                         DaylightName = "EDT";
+                         DisplayName = "America/New_York";
+                         Id = "America/New_York";
+                         StandardName = "EST";
+                         SupportsDaylightSavingTime = true;}
+>
+
+- Tz.findTimeZone "nyc" ;;
+val it : System.TimeZoneInfo option =
+  Some America/New_York {BaseUtcOffset = -05:00:00;
+                         DaylightName = "EDT";
+                         DisplayName = "America/New_York";
+                         Id = "America/New_York";
+                         StandardName = "EST";
+                         SupportsDaylightSavingTime = true;}
+>
+
+- Tz.findTimeZone "nyc" |> Option.map Dt.nowTz ;;
+val it : System.DateTime option =
+  Some 4/27/2017 10:55:24 PM {Date = 4/27/2017 12:00:00 AM;
+                              Day = 27;
+                              DayOfWeek = Thursday;
+                              DayOfYear = 117;
+                              Hour = 22;
+                              Kind = Unspecified;
+                              Millisecond = 426;
+                              Minute = 55;
+                              Month = 4;
+                              Second = 24;
+                              Ticks = 636289305244260630L;
+                              TimeOfDay = 22:55:24.4260630;
+                              Year = 2017;}
+>
+
+- Tz.findTimeZone "nyc" |> Option.map Dt.nowTz |> Option.map Dt.toIso8601 ;;
+val it : string option = Some "2017-04-27T22:55:55.3093340-03:00"
+>
+
+- Tz.findTimeZone "nyc" |> Option.map (Dt.nowTz >> Dt.toIso8601) ;;
+val it : string option = Some "2017-04-27T22:56:43.9827980-03:00"
+>
+
+- Tz.findTimeZone "hkg" ;;
+val it : System.TimeZoneInfo option =
+  Some Asia/Hong_Kong {BaseUtcOffset = 08:00:00;
+                       DaylightName = "HKST";
+                       DisplayName = "Asia/Hong_Kong";
+                       Id = "Asia/Hong_Kong";
+                       StandardName = "HKT";
+                       SupportsDaylightSavingTime = true;}
+>
+
+
+ Tz.findTimeZone "hkg" |> Option.map (Dt.nowTz >> Dt.toIso8601) ;;
+val it : string option = Some "2017-04-28T10:58:16.6069520-03:00"
+>
+
+- Tz.findTimeZone "wrong" |> Option.map (Dt.nowTz >> Dt.toIso8601) ;;
+val it : string option = None
+>
+
 #+END_SRC
 
 *** Examples
