@@ -123,14 +123,11 @@ module Http =
 
     let requestString (url: string) propList =
         let req = request url propList
-        getResponseString req 
+        getResponseString req
 
-/// Utilities for simple http request
-///         
-module HttpUtils = 
 
-    let downloadString (url: string) =
-        let client = new WebClient ()
+    let requestSimple (url: string) =
+        let client = new WebClient()
         client.DownloadString(url)
 
     let downloadFile (url: string) filename =
