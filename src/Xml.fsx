@@ -399,7 +399,19 @@ module Utils =
             |> Doc.show
 
     /// Display Xml file or xml uri (url)            
-    let pprintUri xmlFile =
-        xmlFile |> Doc.loadUri 
-                |> Doc.show
+    let pprintUri xmlUri =
+        xmlUri |> Doc.loadUri 
+               |> Doc.show
+               
+    /// Print structure of xml string            
+    let printStruct xml =
+        xml  |> Doc.load
+             |> Doc.root
+             |> Node.showStruct
+
+    /// Print structure of Xml Url of File              
+    let printStructUri xmlUri =
+        xmlUri |> Doc.loadUri
+               |> Doc.root
+               |> Node.showStruct
             
