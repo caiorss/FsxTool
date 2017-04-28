@@ -749,186 +749,205 @@ Module: Directory
 | getFilesAbs | path:string -> seq<string>               | Get directory files with absolute path |
 | getFilesExt | path:string -> ext:string -> seq<string> | Get all files with given extension     |
 |             |                                          |                                        |
-** TODO FsxTool.HttpReq - Http Client Library 
-*** Types 
+** TODO FsxTool.HttpReq - Http Client Library
+*** Types
 
 Module: FsxTool.HttpReq.HttpTypes
 
-#+BEGIN_SRC fsharp 
+#+BEGIN_SRC fsharp
 module HttpTypes =
-    
+
     type HttpMethod =
-        | GET 
+        | GET
         | POST
         | PUT
         | HEAD
         | DELETE
-        | PATCH 
+        | PATCH
 
     type HttpProp =
-        | Method            of HttpMethod 
+        | Method            of HttpMethod
         | ContentType       of string
         | UserAgent         of string
-        | Headers           of (string * string) list 
+        | Headers           of (string * string) list
         | PostParams        of (string * string) list
         | PostPayload       of string
         | PostPayloadBytes  of byte []
         | Timeout           of int
         | KeepAlive         of bool
-        | Redirect          of bool 
+        | Redirect          of bool
 #+END_SRC
-*** Examples 
-**** GET Request 
+*** Examples
+**** GET Request
+
+Http Get Request
 
 #+BEGIN_SRC fsharp
-open FsxTool.HttpReq 
-open FsxTool.HttpReq.HttpTypes 
+> module Http = FsxTool.HttpReq.Http ;;
+- open FsxTool.HttpReq.HttpTypes ;;
+> 
 
-let url = "http://www.httpbin.org/get"
+let qparams = ["q", "search google"; "x", "-- 2.23"; "y", "-10.3434" ]
+let rlist   = [Method GET; UserAgent "F# browser"; ContentType "tex- t/html"] ;;
 
-let request = Http.request url [ Method GET 
-                              ; ContentType "text"
-                              ; UserAgent "F# Browser"
-                              ; Headers [  "SoapMethod", "getOrdersXML"
-                                         ; "Language",   "Spanish"
-                                         ;   
-                                        ]  
-                                ]
-
-val request : System.Net.HttpWebRequest
-
-> request ;;
-val it : System.Net.HttpWebRequest =
-  System.Net.HttpWebRequest
-    {Accept = null;
-     Address = http://www.httpbin.org/get;
-     AllowAutoRedirect = true;
-     AllowReadStreamBuffering = false;
-     AllowWriteStreamBuffering = true;
-     AuthenticationLevel = MutualAuthRequested;
-     AutomaticDecompression = None;
-     CachePolicy = null;
-     ClientCertificates = seq [];
-             ... ... ... 
-
-     ServicePoint = System.Net.ServicePoint;
-     SupportsCookieContainer = true;
-     Timeout = 100000;
-     TransferEncoding = null;
-     UnsafeAuthenticatedConnectionSharing = false;
-     UseDefaultCredentials = false;
-     UserAgent = "F# Browser";}
-
-
-- let resp = Http.getResponse request ;;
-
-val resp : System.Net.HttpWebResponse
-
-> resp ;;
-val it : System.Net.HttpWebResponse =
-  System.Net.HttpWebResponse
-    {CharacterSet = "ISO-8859-1";
-     ContentEncoding = "";
-     ContentLength = 291L;
-     ContentType = "application/json";
-     Cookies = seq [];
-     Headers = seq ["Connection"; "Server"; "Date"; "Content-Type"; ...];
-     IsFromCache = false;
-     IsMutuallyAuthenticated = ?;
-     LastModified = 4/24/2017 8:16:19 PM;
-     Method = "GET";
-     ProtocolVersion = 1.1;
-     ResponseUri = http://www.httpbin.org/get;
-     Server = "gunicorn/19.7.1";
-     StatusCode = OK;
-     StatusDescription = "OK";
-     SupportsHeaders = true;}
-
-
-- let text = Http.getResponseString request ;;
-
-val text : string =
+- Http.requestString "http://www.httpbin.org/get" qparams rlist
+val it : string =
   "{
-  "args": {}, 
+  "args": {
+    "q": "search google",
+    "x": "-2.23",
+    "y": "-10.3434"
+  },
   "headers": {
     "Connection": "close", 
- "+[230 chars]
-
-> 
-
-> printfn "%s" text ;;
-{
-  "args": {}, 
-  "headers": {
-    "Connection": "close", 
-    "Content-Type": "text", 
+    "Content-Type": "text/html",
     "Host": "www.httpbin.org", 
-    "Language": "Spanish", 
-    "Soapmethod": "getOrdersXML", 
-    "User-Agent": "F# Browser"
+    "User-Agent": "F# browser"
   }, 
-  "origin": "177.207.118.2", 
-  "url": "http://www.httpbin.org/get"
+  "origin": "187.113.170.164",
+  "url": "http://www.httpbin.org/get?q=search+google&x=-2.23&y=-10.3434"
 }
-
-val it : unit = ()
-> 
-
-///      Or          //
-//-------------------//
-
-
-
-let getRequest () =
-    let url =  "http://www.httpbin.org/get"
-    let reqParams =
-        [ Method GET 
-        ; ContentType "text"
-        ; UserAgent "F# Browser"
-        ; Headers [  "SoapMethod", "getOrdersXML"
-                   ; "Language",   "Spanish"
-                  ]  
-          ]
-    Http.requestString url reqParams
-
-> let out = getRequest() ;;
-
-val out : string =
-  "{
-  "args": {}, 
-  "headers": {
-    "Connection": "close", 
- "+[230 chars]
-
-> printfn "%s" out ;;                              
-{
-  "args": {}, 
-  "headers": {
-    "Connection": "close", 
-    "Content-Type": "text", 
-    "Host": "www.httpbin.org", 
-    "Language": "Spanish", 
-    "Soapmethod": "getOrdersXML", 
-    "User-Agent": "F# Browser"
-  }, 
-  "origin": "177.207.118.2", 
-  "url": "http://www.httpbin.org/get"
-}
-
-val it : unit = ()
-> 
+"
 
 #+END_SRC
 
-**** POST Request 
-***** Form 
+#+BEGIN_SRC fsharp
+  open FsxTool.HttpReq
+  open FsxTool.HttpReq.HttpTypes
 
-#+BEGIN_SRC fsharp 
+  let url = "http://www.httpbin.org/get"
+
+  let qlist = ["q", "search F# google" ; "lat", "-100.23"; "long", "90.34"]
+
+  let rlist = [ Method GET
+              ; ContentType "text"
+              ; UserAgent "F# Browser"
+              ; Headers [  "SoapMethod", "getOrdersXML"
+                         ; "Language",   "Spanish"
+
+                        ]
+                ]
+
+  let request = Http.request url qlist rlist
+
+
+  val request : System.Net.HttpWebRequest
+
+
+  - let resp = Http.getResponse request ;;
+
+  val resp : System.Net.HttpWebResponse
+
+
+  > resp ;;
+  val it : System.Net.HttpWebResponse =
+    System.Net.HttpWebResponse
+      {CharacterSet = "ISO-8859-1";
+       ContentEncoding = "";
+       ContentLength = 413L;
+       ContentType = "application/json";
+       Cookies = seq [];
+       Headers = seq ["Connection"; "Server"; "Date"; "Content-Type"; ...];
+       IsFromCache = false;
+       IsMutuallyAuthenticated = ?;
+       LastModified = 4/28/2017 3:04:35 AM;
+       Method = "GET";
+       ProtocolVersion = 1.1;
+       ResponseUri = http://www.httpbin.org/get?q=search+F%23+google&lat=-100.23&long=90.34;
+       Server = "gunicorn/19.7.1";
+       StatusCode = OK;
+       StatusDescription = "OK";
+       SupportsHeaders = true;}
+  >
+
+
+  - let text = Http.getResponseString request ;;
+
+
+  - let text = Http.getResponseString request ;;
+
+  val text : string =
+    "{
+    "args": {
+      "lat": "-100.23",
+      "long": "90.34",
+    "+[352 chars]
+
+  >
+
+  >  printfn "%s" text ;;
+  {
+    "args": {
+      "lat": "-100.23",
+      "long": "90.34",
+      "q": "search F# google"
+    },
+    "headers": {
+      "Connection": "close",
+      "Content-Type": "text",
+      "Host": "www.httpbin.org",
+      "Language": "Spanish",
+      "Soapmethod": "getOrdersXML",
+      "User-Agent": "F# Browser"
+    },
+    "origin": "187.113.170.164",
+    "url": "http://www.httpbin.org/get?q=search+F%23+google&lat=-100.23&long=90.34"
+  }
+
+  val it : unit = ()
+  >
+
+
+  ///      Or          //
+  //-------------------//
+
+  let getRequest () =
+      let url =  "http://www.httpbin.org/get"
+      let qlist = ["q", "search F# google" ; "lat", "-100.23"; "long", "90.34"]
+      let reqParams =
+          [ Method GET
+          ; ContentType "text"
+          ; UserAgent "F# Browser"
+          ; Headers [  "SoapMethod", "getOrdersXML"
+                     ; "Language",   "Spanish"
+                    ]
+            ]
+      Http.requestString url qlist reqParams
+
+
+  > getRequest () |> printfn "%s" ;;
+  {
+    "args": {
+      "lat": "-100.23",
+      "long": "90.34",
+      "q": "search F# google"
+    },
+    "headers": {
+      "Connection": "close",
+      "Content-Type": "text",
+      "Host": "www.httpbin.org",
+      "Language": "Spanish",
+      "Soapmethod": "getOrdersXML",
+      "User-Agent": "F# Browser"
+    },
+    "origin": "187.113.170.164",
+    "url": "http://www.httpbin.org/get?q=search+F%23+google&lat=-100.23&long=90.34"
+  }
+
+  val it : unit = ()
+  >
+
+#+END_SRC
+
+**** POST Request
+***** Form
+
+#+BEGIN_SRC fsharp
 #r "bin/FsxTool.dll"
 
-open FsxTool.HttpReq 
-open FsxTool.HttpReq.HttpTypes 
- 
+open FsxTool.HttpReq
+open FsxTool.HttpReq.HttpTypes
+
 
 let postForm () =
     let url = "http://www.httpbin.org/post"
@@ -941,87 +960,132 @@ let postForm () =
                                   ("key3", "value3")
                                   ]
                           ]
-    printfn "%s" <| Http.requestString url reqParams
-                          
+    printfn "%s" <| Http.requestString url [] reqParams
+
 
 > postForm () ;;
 {
-  "args": {}, 
-  "data": "", 
-  "files": {}, 
+  "args": {},
+  "data": "",
+  "files": {},
   "form": {
-    "key1": "value1", 
-    "key2": "value2", 
+    "key1": "value1",
+    "key2": "value2",
     "key3": "value3"
-  }, 
+  },
   "headers": {
-    "Connection": "close", 
-    "Content-Length": "36", 
-    "Content-Type": "application/x-www-form-urlencoded", 
-    "Expect": "100-continue", 
-    "Host": "www.httpbin.org", 
+    "Connection": "close",
+    "Content-Length": "36",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Expect": "100-continue",
+    "Host": "www.httpbin.org",
     "User-Agent": "Firefox"
-  }, 
-  "json": null, 
-  "origin": "177.207.118.2", 
+  },
+  "json": null,
+  "origin": "177.207.118.2",
   "url": "http://www.httpbin.org/post"
 }
 
 val it : unit = ()
-> 
+>
 
 #+END_SRC
 
-***** Json payload 
+***** Json payload
 
-#+BEGIN_SRC fsharp 
-#r "bin/FsxTool.dll"
+#+BEGIN_SRC fsharp
+  #r "bin/FsxTool.dll"
 
-open FsxTool.HttpReq 
-open FsxTool.HttpReq.HttpTypes 
- 
-let  httpPostJson () =    
-    let url = "http://www.httpbin.org/post"
-    let reqParams =  [
-        Method POST;
-        // Headers     [("Accept", "application/json")];
-        ContentType "application/json";
-        UserAgent   "Firefox Fake User Agent";
-        PostPayload "{\"name\": \"John\", \"id\": 2010, \"lang\" : \"es\" }" ;
-        ]
-    printfn "%s" <| Http.requestString url reqParams
+  open FsxTool.HttpReq
+  open FsxTool.HttpReq.HttpTypes
+
+  let  httpPostJson () =
+      let url = "http://www.httpbin.org/post"
+      let reqParams =  [
+          Method POST;
+          // Headers     [("Accept", "application/json")];
+          ContentType "application/json";
+          UserAgent   "Firefox Fake User Agent";
+          PostPayload "{\"name\": \"John\", \"id\": 2010, \"lang\" : \"es\" }" ;
+          ]
+      printfn "%s" <| Http.requestString url [] reqParams
 
 
-> httpPostJson () ;;
-{
-  "args": {}, 
-  "data": "{\"name\": \"John\", \"id\": 2010, \"lang\" : \"es\" }", 
-  "files": {}, 
-  "form": {}, 
-  "headers": {
-    "Connection": "close", 
-    "Content-Length": "44", 
-    "Content-Type": "application/json", 
-    "Expect": "100-continue", 
-    "Host": "www.httpbin.org", 
-    "User-Agent": "Firefox Fake User Agent"
-  }, 
-  "json": {
-    "id": 2010, 
-    "lang": "es", 
-    "name": "John"
-  }, 
-  "origin": "177.207.118.2", 
-  "url": "http://www.httpbin.org/post"
-}
+  > httpPostJson () ;;
+  {
+    "args": {},
+    "data": "{\"name\": \"John\", \"id\": 2010, \"lang\" : \"es\" }",
+    "files": {},
+    "form": {},
+    "headers": {
+      "Connection": "close",
+      "Content-Length": "44",
+      "Content-Type": "application/json",
+      "Expect": "100-continue",
+      "Host": "www.httpbin.org",
+      "User-Agent": "Firefox Fake User Agent"
+    },
+    "json": {
+      "id": 2010,
+      "lang": "es",
+      "name": "John"
+    },
+    "origin": "177.207.118.2",
+    "url": "http://www.httpbin.org/post"
+  }
 
-val it : unit = ()
-> 
+  val it : unit = ()
+  >
+
+
+
+  let  httpPostJson2 () =
+      let url = "http://www.httpbin.org/post"
+      let query = [("method", "getData") ; ("q", "search the internet"); ("dummy", "0000.23")]
+      let reqParams =  [
+          Method POST;
+          // Headers     [("Accept", "application/json")];
+          ContentType "application/json";
+          UserAgent   "Firefox Fake User Agent";
+          PostPayload "{\"name\": \"John\", \"id\": 2010, \"lang\" : \"es\" }" ;
+          ]
+      printfn "%s" <| Http.requestString url query reqParams
+
+
+  > httpPostJson2() ;;
+  {
+    "args": {
+      "dummy": "0000.23",
+      "method": "getData",
+      "q": "search the internet"
+    },
+    "data": "{\"name\": \"John\", \"id\": 2010, \"lang\" : \"es\" }",
+    "files": {},
+    "form": {},
+    "headers": {
+      "Connection": "close",
+      "Content-Length": "44",
+      "Content-Type": "application/json",
+      "Expect": "100-continue",
+      "Host": "www.httpbin.org",
+      "User-Agent": "Firefox Fake User Agent"
+    },
+    "json": {
+      "id": 2010,
+      "lang": "es",
+      "name": "John"
+    },
+    "origin": "187.113.170.164",
+    "url": "http://www.httpbin.org/post?method=getData&q=search+the+internet&dummy=0000.23"
+  }
+
+  val it : unit = ()
+  >
 
 #+END_SRC
 
-** FsxTool.Xml - Xml Parsing Combinators 
-*** Functions 
+** FsxTool.Xml - Xml Parsing Combinators
+*** Functions
 
 Module Doc:
 
