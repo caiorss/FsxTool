@@ -1,6 +1,25 @@
 /// Useful extension methods
 namespace FsxTool.Core
 
+/// Functional combinators.
+module Fn =
+
+    /// Identity function
+    let id x = x
+
+    /// Constant function.
+    let constant a b = a
+
+    /// Negate a function
+    let inline non fn x = not (fn x)
+
+    /// Run  a function forever
+    let forever fn =
+        while true do
+            fn ()
+
+    let inline flip fn a b = fn b a
+
 
 /// Option extension module
 ///
