@@ -148,13 +148,15 @@ module Result =
         let (>=+) ma fn = map fn ma 
 
 
-
 module String  =
     open System
     open System.Text.RegularExpressions
 
-    let join prefix (strlist: string seq) =
-        String.Join(prefix, strlist)
+    let toString (obj: obj) =
+        obj.ToString()
+
+    let join sep (strlist: string seq) =
+        String.Join(sep, strlist)
 
     let splitByWords (words: string []) (str: string) =
         str.Split(words, StringSplitOptions.RemoveEmptyEntries)
@@ -168,17 +170,14 @@ module String  =
     let splitLines (str: string) =
         splitByChars [| '\n'; '\r' |] str
 
-
     let splitSpace (str: string) =
         splitByChars [| ' '; '\t' |] str
-
 
     let endsWith suffix (str: string) =
         str.EndsWith(suffix)
 
     let startsWith prefix (str: string) =
         str.StartsWith(prefix)
-
 
     /// Add suffix to string 
     let addPrefix (prefix: string) (str: string) =
