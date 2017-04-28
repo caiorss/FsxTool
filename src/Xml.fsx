@@ -391,7 +391,15 @@ module FXPath =
       Map.ofList <| List.map (fun attr -> attr, Seq.map (Node.attrv2 attr) nodes) attributes
 
 
+module Utils =
 
+    /// Pretty print Xml-string 
+    let pprint (xml: string) =
+        xml |> Doc.load
+            |> Doc.show
+
+    /// Display Xml file or xml uri (url)            
+    let pprintUri xmlFile =
         xmlFile |> Doc.loadUri 
                 |> Doc.show
             
