@@ -27,7 +27,7 @@ let tableStdFmt = { TableSpace = 3
                   }
 
 let setSpaces n (fmt: TableFormat) =
-    { fmt with TableSpaces = n}
+    { fmt with TableSpace = n}
 
 let setOffset n (fmt: TableFormat) =
     { fmt with TableOffset = n}
@@ -49,11 +49,11 @@ let arrayToStr (xs: 'a []) =
 
 
 /// Print table with format 
-let printTableFmt (fmt: TableFormat) (headers: string []) (columns: string [] [])  =
-    let nspaces = fmt.TableSpaces
+let printTableFmt (fmt: TableFormat) (format: 'a -> string) (headers: string []) (columns: 'a [] [])  =
+    let nspaces = fmt.TableSpace
 
     let headersWidth = Array.map String.length headers
-    let colsWidth =  Array.map getWidth columns
+    let colsWidth =  Array.map (getWidth format) columns
     
     let widths = if Array.isEmpty headers
                  then colsWidth
@@ -94,7 +94,7 @@ let printTableFmt (fmt: TableFormat) (headers: string []) (columns: string [] []
     for r = 0 to nrows - 1 do
         System.Console.Write(offset)
         for c = 0 to ncols - 1 do
-            let cell = columns.[c].[r]
+            let cell = columns.[c].[r].ToString()
             let spaces = String.replicate (nspaces + widths.[c] - cell.Length) " "
             System.Console.Write(cell + spaces)
         System.Console.WriteLine()
