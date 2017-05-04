@@ -27,6 +27,7 @@ module TimeZone =
         | "lnd"         -> "Europe/London"
         | "hkg"         -> "Asia/Hong_Kong"
         | "tky"         -> "Asia/Tokyo"
+        | "loc"         -> TimeZoneInfo.Local.Id
         | _             -> tzname
 
     /// Get a timezone by name. Throws exception if the name is invalid.
