@@ -115,9 +115,22 @@ let printTableHeader headers columns  =
 
 
 
+type TableDisp =
     
+    static member Print(columns) =
+        printTableFmt tableStdFmt id [||] columns
 
-    
+    static member Print(columns: float [] []) =
+        printTableFmt tableStdFmt (fun s -> s.ToString()) [||] columns
+
+
+    static member Print(columns, headers) =
+        printTableFmt tableStdFmt id headers columns
+
+    static member Print(columns, headers, format) =
+        printTableFmt tableStdFmt format headers columns
+
+
 printTableHeader headers [| countries ; capitals; code |] 
 
 System.Console.WriteLine ()
