@@ -1,4 +1,4 @@
-namespace FsxTool.PPtable 
+namespace FsxTool.PPTable 
 
 // Table manipulation utilities
 // Objective: Display tables and matrices in a easy way.
@@ -18,7 +18,7 @@ module TableFormat =
 
 open TableFormat
 
-module PPTable =
+module TablePrint =
 
     /// Standard table format             
     let tableStdFmt = { TableSpace = 3
@@ -101,7 +101,7 @@ module PPTable =
             System.Console.WriteLine()
 
 
-type TableDisp =
+type PPTable =
     
     static member Print(columns, ?header, ?space, ?offset, ?lineChar) =
         let header = defaultArg header [||]
@@ -114,7 +114,7 @@ type TableDisp =
                   ; TableLine   = if Array.isEmpty header then false else true
                   ; TableLineChar = lineChar
                   }
-        PPTable.printTableFmt fmt id header columns
+        TablePrint.printTableFmt fmt id header columns
 
     static member Print(columns: float [] [], ?header, ?space, ?offset, ?lineChar) =
         let header = defaultArg header [||]
@@ -126,10 +126,10 @@ type TableDisp =
                   ; TableLine   = if Array.isEmpty header then false else true
                   ; TableLineChar = lineChar
                   }
-        PPTable.printTableFmt fmt (fun s -> s.ToString()) header columns
+        TablePrint.printTableFmt fmt (fun s -> s.ToString()) header columns
        
     // static member Print(columns: float [] []) =        
 
     static member Print(columns, headers, format) =     
-        PPTable.printTableFmt PPTable.tableStdFmt format headers columns
+        TablePrint.printTableFmt TablePrint.tableStdFmt format headers columns
                 
