@@ -1770,14 +1770,21 @@ val dispRSSItem : item:RSSItem -> unit
 #+END_SRC
 ** TODO FsxTool.Table - Table Pretty Print 
 
-*Example 1:*
+*Example:*
+
+File: [[file:demos/pptable.fsx][file:demos/pptable.fsx]]
 
 #+BEGIN_SRC fsharp 
-#r "bin/FsxTool.dll" ;;
+/// Demonstration of FsxTool.PPTable
+
+#r "../bin/FsxTool.dll" ;;
 
 open System
 
 type PPTable = FsxTool.PPTable.PPTable
+
+module Dt = FsxTool.Dtime.Dtime 
+module Tz = FsxTool.Dtime.TimeZone 
 
 let () =
     let countries = [| "Netherlands"; "Belgium"; "France"; "Uk" |]
@@ -1785,25 +1792,9 @@ let () =
     let code = [| "1034"; "423434"; "83434"; "98723" |]
     let headers = [| "Country"; "Capital"; "Code" |]
     PPTable.Print([| countries ; capitals; code |], headers)
-#+END_SRC
 
-Output: 
-
-#+BEGIN_SRC text 
-Country       Capital     Code     
------------   ---------   ------   
-Netherlands   Amsterdam   1034     
-Belgium       Brussels    423434   
-France        Paris       83434 
-#+END_SRC
-
-*Example 2* 
-
-#+BEGIN_SRC fsharp 
-#r "bin/FsxTool.dll" ;;
-open System
-type PPTable = FsxTool.PPTable.PPTable
-
+Console.WriteLine ("\n\n")
+ 
 let () = 
     let syms    = [| "EUR" ; "USD"; "BRL"; "CAD" |]
     let rates   = [| 1.2  ; 2.123; 3.25 ; 4.6   |]
@@ -1811,19 +1802,55 @@ let () =
     let prices  = [| 10.23; 20.30; 3.002; 4.56 |]
     PPTable.Print([| rates; amounts; prices|]
                   ,header = [| "rate"; "amount"; "price" |]
-                  ,space  = 4
+                  ,space  = 6
                   ,offset = 5
+                  )
+
+Console.WriteLine ("\n\n")
+
+let () = 
+    let now = Dt.nowUTC()
+    let tzList = Array.map Tz.getTimeZone [| "America/Recife"; "lnd" ; "nyc"; "tky"; "utc" |]
+    let tzNames = Array.map Tz.getName tzList
+    let times = tzList
+                |> Seq.map (fun tz -> Dt.utcToTz tz  now )
+                |> Seq.map (fun s -> s.ToString())
+                |> Array.ofSeq
+    PPTable.Print([| tzNames ; times |]
+                  ,header = [| "Time zone" ; "Time" |]
                   )
 
 #+END_SRC
 
-#+BEGIN_SRC text 
-     rate     amount         price    
-     -----    -----------    -----    
-     1.2      3              10.23    
-     2.123    5              20.3     
-     3.25     2.449489743    3.002    
-     4.6      10             4.56  
+Output: 
+
+#+BEGIN_SRC text  
+$ fsharpi demos/pptable.fsx 
+Country       Capital     Code     
+-----------   ---------   ------   
+Netherlands   Amsterdam   1034     
+Belgium       Brussels    423434   
+France        Paris       83434    
+Uk            London      98723    
+
+
+
+     rate       amount           price      
+     -----      -----------      -----      
+     1.2        3                10.23      
+     2.123      5                20.3       
+     3.25       2.449489743      3.002      
+     4.6        10               4.56       
+
+
+
+Time zone          Time                  
+----------------   -------------------   
+America/Recife     5/4/2017 5:50:49 AM   
+Europe/London      5/4/2017 9:50:49 AM   
+America/New_York   5/4/2017 4:50:49 AM   
+Asia/Tokyo         5/4/2017 5:50:49 PM   
+UTC                5/4/2017 8:50:49 AM 
 #+END_SRC
 
 * .NET Documentation
