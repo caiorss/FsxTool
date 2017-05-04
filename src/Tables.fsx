@@ -1,9 +1,8 @@
+namespace FsxTool.PPtable 
+
 // Table manipulation utilities
 // Objective: Display tables and matrices in a easy way.
 //
-
-// Column of Strings
-type StrCol = string list
 
 
 module TableFormat = 
@@ -19,86 +18,88 @@ module TableFormat =
 
 open TableFormat
 
-/// Standard table format             
-let tableStdFmt = { TableSpace = 3
-                  ; TableOffset = 0
-                  ; TableLine = false
-                  ; TableLineChar = "-"
-                  }
+module PPTable =
 
-let setSpaces n (fmt: TableFormat) =
-    { fmt with TableSpace = n}
+    /// Standard table format             
+    let tableStdFmt = { TableSpace = 3
+                      ; TableOffset = 0
+                      ; TableLine = false
+                      ; TableLineChar = "-"
+                      }
 
-let setOffset n (fmt: TableFormat) =
-    { fmt with TableOffset = n}
+    let setSpaces n (fmt: TableFormat) =
+        { fmt with TableSpace = n}
 
-let setLineHeader flag (fmt: TableFormat) =
-    { fmt with TableLine = flag }
+    let setOffset n (fmt: TableFormat) =
+        { fmt with TableOffset = n}
 
-
-/// Get column width
-let getWidth format col =
-    let colLen = col |> Seq.ofArray
-                     |> Seq.map (format >> String.length)
-                     |> Seq.max
-    colLen
+    let setLineHeader flag (fmt: TableFormat) =
+        { fmt with TableLine = flag }
 
 
-let arrayToStr (xs: 'a []) =
-    Array.map (fun s -> s.ToString()) xs
+    /// Get column width
+    let getWidth format col =
+        let colLen = col |> Seq.ofArray
+                         |> Seq.map (format >> String.length)
+                         |> Seq.max
+        colLen
 
 
-/// Print table with format 
-let printTableFmt (fmt: TableFormat) (format: 'a -> string) (headers: string []) (columns: 'a [] [])  =
-    let nspaces = fmt.TableSpace
+    let arrayToStr (xs: 'a []) =
+        Array.map (fun s -> s.ToString()) xs
 
-    let headersWidth = Array.map String.length headers
-    let colsWidth =  Array.map (getWidth format) columns
-    
-    let widths = if Array.isEmpty headers
-                 then colsWidth
-                 else Array.map2 max colsWidth headersWidth
 
-    let ncols = Array.length columns
-    let nrows = Array.length (Array.item 0 columns)
-    let offset = String.replicate fmt.TableOffset " "
-    
-    // Print table header
-    if not <| Array.isEmpty headers
-    then (
-        System.Console.Write(offset)
-        
-        for c = 0 to ncols - 1 do
-           let cell = headers.[c]
-           let n = nspaces + widths.[c] - cell.Length
-           let spaces = String.replicate n " " 
-           System.Console.Write(cell + spaces)
-        
-        System.Console.WriteLine()
-        )
-    
+    /// Print table with format 
+    let printTableFmt (fmt: TableFormat) (format: 'a -> string) (headers: string []) (columns: 'a [] [])  =
+        let nspaces = fmt.TableSpace
 
-    if fmt.TableLine
-    then (
-        System.Console.Write(offset)
-        
-        for c = 0 to ncols - 1 do            
-            let line = String.replicate widths.[c] fmt.TableLineChar            
-            let sep  = String.replicate nspaces " "
-            System.Console.Write(line + sep)
-        
-        System.Console.WriteLine()
-        )                                    
-        
-    // Print table rows 
-    for r = 0 to nrows - 1 do
-        System.Console.Write(offset)
-        for c = 0 to ncols - 1 do
-            let cell = columns.[c].[r].ToString()
-            let spaces = String.replicate (nspaces + widths.[c] - cell.Length) " "
-            System.Console.Write(cell + spaces)
-        System.Console.WriteLine()
-            
+        let headersWidth = Array.map String.length headers
+        let colsWidth =  Array.map (getWidth format) columns
+
+        let widths = if Array.isEmpty headers
+                     then colsWidth
+                     else Array.map2 max colsWidth headersWidth
+
+        let ncols = Array.length columns
+        let nrows = Array.length (Array.item 0 columns)
+        let offset = String.replicate fmt.TableOffset " "
+
+        // Print table header
+        if not <| Array.isEmpty headers
+        then (
+            System.Console.Write(offset)
+
+            for c = 0 to ncols - 1 do
+               let cell = headers.[c]
+               let n = nspaces + widths.[c] - cell.Length
+               let spaces = String.replicate n " " 
+               System.Console.Write(cell + spaces)
+
+            System.Console.WriteLine()
+            )
+
+
+        if fmt.TableLine
+        then (
+            System.Console.Write(offset)
+
+            for c = 0 to ncols - 1 do            
+                let line = String.replicate widths.[c] fmt.TableLineChar            
+                let sep  = String.replicate nspaces " "
+                System.Console.Write(line + sep)
+
+            System.Console.WriteLine()
+            )                                    
+
+        // Print table rows 
+        for r = 0 to nrows - 1 do
+            System.Console.Write(offset)
+            for c = 0 to ncols - 1 do
+                let cell = columns.[c].[r].ToString()
+                let spaces = String.replicate (nspaces + widths.[c] - cell.Length) " "
+                System.Console.Write(cell + spaces)
+            System.Console.WriteLine()
+
 
 type TableDisp =
     
@@ -113,7 +114,7 @@ type TableDisp =
                   ; TableLine   = if Array.isEmpty header then false else true
                   ; TableLineChar = lineChar
                   }
-        printTableFmt fmt id header columns
+        PPTable.printTableFmt fmt id header columns
 
     static member Print(columns: float [] [], ?header, ?space, ?offset, ?lineChar) =
         let header = defaultArg header [||]
@@ -125,10 +126,10 @@ type TableDisp =
                   ; TableLine   = if Array.isEmpty header then false else true
                   ; TableLineChar = lineChar
                   }
-        printTableFmt fmt (fun s -> s.ToString()) header columns
+        PPTable.printTableFmt fmt (fun s -> s.ToString()) header columns
        
     // static member Print(columns: float [] []) =        
 
     static member Print(columns, headers, format) =     
-        printTableFmt tableStdFmt format headers columns
+        PPTable.printTableFmt PPTable.tableStdFmt format headers columns
                 
