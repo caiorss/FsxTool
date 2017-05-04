@@ -50,6 +50,10 @@ let getWidth format col =
     colLen
 
 
+let arrayToStr (xs: 'a []) =
+    Array.map (fun s -> s.ToString()) xs
+
+
 /// Print table with format 
 let printTableFmt (fmt: TableFormat) (headers: string []) (columns: string [] [])  =
     let nspaces = fmt.TableSpaces
