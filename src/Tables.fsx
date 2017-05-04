@@ -102,15 +102,33 @@ let printTableFmt (fmt: TableFormat) (format: 'a -> string) (headers: string [])
 
 type TableDisp =
     
-    static member Print(columns) =
-        printTableFmt tableStdFmt id [||] columns
+    static member Print(columns, ?header, ?space, ?offset, ?lineChar) =
+        let header = defaultArg header [||]
+        let offset = defaultArg offset 0
+        let space  = defaultArg space  3
+        let lineChar = defaultArg lineChar "-"
+        
+        let fmt = { TableSpace = space
+                  ; TableOffset = offset
+                  ; TableLine   = if Array.isEmpty header then false else true
+                  ; TableLineChar = lineChar
+                  }
+        printTableFmt fmt id header columns
 
-    static member Print(columns: float [] []) =
-        printTableFmt tableStdFmt (fun s -> s.ToString()) [||] columns
+    static member Print(columns: float [] [], ?header, ?space, ?offset, ?lineChar) =
+        let header = defaultArg header [||]
+        let offset = defaultArg offset 0
+        let space  = defaultArg space  3
+        let lineChar = defaultArg lineChar "-"        
+        let fmt = { TableSpace = space
+                  ; TableOffset = offset
+                  ; TableLine   = if Array.isEmpty header then false else true
+                  ; TableLineChar = lineChar
+                  }
+        printTableFmt fmt (fun s -> s.ToString()) header columns
+       
+    // static member Print(columns: float [] []) =        
 
-
-    static member Print(columns, headers) =
-        printTableFmt tableStdFmt id headers columns
-
-    static member Print(columns, headers, format) =
+    static member Print(columns, headers, format) =     
         printTableFmt tableStdFmt format headers columns
+                
