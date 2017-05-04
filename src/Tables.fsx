@@ -5,12 +5,6 @@
 // Column of Strings
 type StrCol = string list
 
-let countries = [| "Netherlands"; "Belgium"; "France"; "Uk" |]
-let capitals = [| "Amsterdam"; "Brussels"; "Paris"; "London"|]
-let code = [| "1034"; "423434"; "83434"; "98723" |]
-
-let headers = [| "Country"; "Capital"; "Code" |]
-
 
 module TableFormat = 
 
@@ -100,43 +94,40 @@ let printTableFmt (fmt: TableFormat) (headers: string []) (columns: string [] []
     for r = 0 to nrows - 1 do
         System.Console.Write(offset)
         for c = 0 to ncols - 1 do
-            let cell = columns.[c].[r]
+            let cell = columns.[c].[r].ToString()
             let spaces = String.replicate (nspaces + widths.[c] - cell.Length) " "
             System.Console.Write(cell + spaces)
         System.Console.WriteLine()
             
-/// Print table (Array of columns) without headers. 
-let printTable columns =
-    printTableFmt tableStdFmt [||] columns 
-
-/// Print table (Array of columns) with column headers.
-let printTableHeader headers columns  =
-    printTableFmt { tableStdFmt with TableLine = true }  headers columns
-
-
 
 type TableDisp =
     
-    static member Print(columns) =
-        printTableFmt tableStdFmt id [||] columns
+    static member Print(columns, ?header, ?space, ?offset, ?lineChar) =
+        let header = defaultArg header [||]
+        let offset = defaultArg offset 0
+        let space  = defaultArg space  3
+        let lineChar = defaultArg lineChar "-"
 
-    static member Print(columns: float [] []) =
-        printTableFmt tableStdFmt (fun s -> s.ToString()) [||] columns
+        let fmt = { TableSpace = space
+                  ; TableOffset = offset
+                  ; TableLine   = if Array.isEmpty header then false else true
+                  ; TableLineChar = lineChar
+                  }
+        printTableFmt fmt id header columns
 
+    static member Print(columns: float [] [], ?header, ?space, ?offset, ?lineChar) =
+        let header = defaultArg header [||]
+        let offset = defaultArg offset 0
+        let space  = defaultArg space  3
+        let lineChar = defaultArg lineChar "-"
+        let fmt = { TableSpace = space
+                  ; TableOffset = offset
+                  ; TableLine   = if Array.isEmpty header then false else true
+                  ; TableLineChar = lineChar
+                  }
+        printTableFmt fmt (fun s -> s.ToString()) header columns
 
-    static member Print(columns, headers) =
-        printTableFmt tableStdFmt id headers columns
+    // static member Print(columns: float [] []) =
 
     static member Print(columns, headers, format) =
         printTableFmt tableStdFmt format headers columns
-
-
-printTableHeader headers [| countries ; capitals; code |] 
-
-System.Console.WriteLine ()
-
-printTable [| countries ; capitals; code |]  
-   
-
-
-
