@@ -11,12 +11,7 @@ let code = [| "1034"; "423434"; "83434"; "98723" |]
 
 let headers = [| "Country"; "Capital"; "Code" |]
 
-/// Get column width 
-let getWidth col =
-    let colLen = col |> Seq.ofArray
-                     |> Seq.map (fun (s: string) -> s.Length)
-                     |> Seq.max
-    colLen 
+
 module TableFormat = 
 
     /// Table Format options 
@@ -45,6 +40,14 @@ let setOffset n (fmt: TableFormat) =
 
 let setLineHeader flag (fmt: TableFormat) =
     { fmt with TableLine = flag }
+
+
+/// Get column width
+let getWidth format col =
+    let colLen = col |> Seq.ofArray
+                     |> Seq.map (format >> String.length)
+                     |> Seq.max
+    colLen
 
 
 /// Print table with format 
