@@ -125,19 +125,23 @@ type Httpr =
 
 
     /// Post request with Json payload.
-    static member PostJson (url: string, json) =
+    static member PostJson (url: string, json, ?basicAuth) =
+        let basicAuth   = defaultArg basicAuth   None 
         Httpr.Request(url
                       ,httpMethod = "POST"
                       ,contentType = "application/json"
                       ,postPayload = Some json
+                      ,basicAuth   = basicAuth
                       )
 
     /// Post request with a Form payload.
-    static member PostForm (url: string, formParams) =
+    static member PostForm (url: string, formParams, ?basicAuth) =
+        let basicAuth   = defaultArg basicAuth   None         
         Httpr.Request(url
                       ,httpMethod = "POST"
                       ,contentType = "application/x-www-form-urlencoded"
                       ,postParams = formParams
+                      ,basicAuth  = basicAuth
                       )
 
 
