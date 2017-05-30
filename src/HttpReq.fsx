@@ -70,6 +70,7 @@ module HttpUtils =
 type Httpr =
 
     static member Request(url: string,
+                          ?query,
                           ?httpMethod,   // Http Method - GET, POST, HEAD
                           ?contentType,
                           ?headers,      // Http Headers
@@ -78,6 +79,7 @@ type Httpr =
                           ?postParams,
                           ?postPayload) =
 
+        let query       = defaultArg query   []
         let headers     = defaultArg headers [||]
         let contentType = defaultArg contentType "text/html"
         let httpMethod  = defaultArg httpMethod  "GET"
@@ -86,7 +88,13 @@ type Httpr =
         let postParams  = defaultArg postParams []
         let postPayload = defaultArg postPayload None
 
-        let req = System.Net.WebRequest.Create url :?> System.Net.HttpWebRequest
+        let urlP = if not <| List.isEmpty query
+                   then HttpUtils.addQueryParams url query
+                   else url
+
+        let req = System.Net.WebRequest.Create urlP
+                  :?> System.Net.HttpWebRequest
+
         req.Method      <- httpMethod
         req.UserAgent   <- userAgent
         req.ContentType <- contentType
@@ -94,6 +102,7 @@ type Httpr =
 
         if not <| List.isEmpty postParams
         then ignore <| HttpUtils.setPostParams postParams req
+
 
         postPayload |> Option.iter (fun p -> HttpUtils.setPostPayload p  req
                                              |> ignore
