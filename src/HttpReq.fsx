@@ -5,29 +5,6 @@ open System.Net
 open System.Web 
 // open System.Collections.Specialized 
 
-/// Http Requst user types
-///
-module HttpTypes =
-    
-    type HttpMethod =
-        | GET 
-        | POST
-        | PUT
-        | HEAD
-        | DELETE
-        | PATCH 
-
-    type HttpProp =
-        | Method            of HttpMethod 
-        | ContentType       of string
-        | UserAgent         of string
-        | Headers           of (string * string) list 
-        | PostParams        of (string * string) list
-        | PostPayload       of string
-        | PostPayloadBytes  of byte []
-        | Timeout           of int
-        | KeepAlive         of bool
-        | Redirect          of bool 
 
 /// Module to perform http requests 
 ///     
