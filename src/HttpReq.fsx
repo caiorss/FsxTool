@@ -31,23 +31,6 @@ module HttpUtils =
 
         System.Text.Encoding.UTF8.GetBytes(data)
 
-    let setContentType contentType (req: HttpWebRequest) =
-        req.ContentType <- contentType 
-        req
-
-    let setUserAgent userAgent (req: HttpWebRequest) =
-        req.UserAgent <- userAgent
-        req 
-
-    let setHttpMethod hmethod (req: HttpWebRequest)  =
-        match hmethod with
-        | GET      -> req.Method <- "GET"
-        | POST     -> req.Method <- "POST"
-        | PUT      -> req.Method <- "PUT"
-        | HEAD     -> req.Method <- "HEAD"
-        | DELETE   -> req.Method <- "DELETE"
-        | PATCH    -> req.Method <- "PATCH"
-        req 
 
     let setPostParams postParams (req: HttpWebRequest) =
         let dataStream = req.GetRequestStream ()
@@ -68,23 +51,6 @@ module HttpUtils =
                   headers
         req 
 
-    let private setPropSingle prop (req: HttpWebRequest) =
-        match prop with
-        | Method m      -> setHttpMethod m req
-        | ContentType c -> setContentType c req
-        | UserAgent a   -> setUserAgent a req 
-        | PostParams p  -> setPostParams p req
-        | PostPayload p -> setPostPayload p req
-        | Headers h     -> setHeaders h req
-        | Timeout t     -> req.Timeout <- t; req 
-        | KeepAlive f   -> req.KeepAlive <- f; req
-        | Redirect f    -> req.AllowAutoRedirect <- f; req
-        | _             -> req 
-
-    let setProp propList (req: HttpWebRequest) =
-        List.iter (fun p -> ignore <| setPropSingle p req) propList
-        req 
-
 
     let getResponse (req: HttpWebRequest) =
         let resp = req.GetResponse() :?> HttpWebResponse
@@ -99,23 +65,6 @@ module HttpUtils =
         reader.Close ()
         output 
 
-    let request (url: string) queryParams propList =
-        let req = addParams url queryParams |> WebRequest.Create
-                                            :?> HttpWebRequest
-        setProp propList req 
-
-    let requestString (url: string) queryParams propList =
-        let req = request url queryParams propList
-        getResponseString req
-
-
-    let requestSimple (url: string) =
-        let client = new WebClient()
-        client.DownloadString(url)
-
-    let downloadFile (url: string) filename =
-        let client = new WebClient ()
-        client.DownloadFile (url, filename)
 
 
 type HttpRq =
