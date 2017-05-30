@@ -8,9 +8,7 @@ open System.Web
 
 /// Module to perform http requests 
 ///     
-module Http =
-
-    open HttpTypes
+module HttpUtils =
 
     /// Add query parameters to URL
     let addParams (url: string) queryParams =
@@ -158,9 +156,9 @@ type HttpRq =
         req.Accept      <- accept
 
         if not <| List.isEmpty postParams
-        then ignore <| Http.setPostParams postParams req
+        then ignore <| HttpUtils.setPostParams postParams req
 
-        postPayload |> Option.iter (fun p -> Http.setPostPayload p  req
+        postPayload |> Option.iter (fun p -> HttpUtils.setPostPayload p  req
                                              |> ignore
                                     )
 
