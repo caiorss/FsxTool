@@ -18,7 +18,7 @@ module HttpUtils =
         uribuilder.Query <- query.ToString()
         uribuilder.ToString()
     
-    let private encodePostParameters parameters =
+    let encodePostParameters parameters =
 
         let data = List.fold (fun acc (key: string, value: string) ->
                               HttpUtility.UrlEncode(key)
