@@ -110,6 +110,14 @@ type Httpr =
 
         req
 
+    /// Post request with Json payload.
+    static member PostJson (url: string, json) =
+        Httpr.Request(url
+                      ,httpMethod = "POST"
+                      ,contentType = "application/json"
+                      ,postPayload = Some json
+                      )
+
 
     static member GetResponse (req: System.Net.HttpWebRequest) =
         let resp = req.GetResponse() :?> HttpWebResponse
