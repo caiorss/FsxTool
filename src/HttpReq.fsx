@@ -142,3 +142,69 @@ module Http =
         let client = new WebClient ()
         client.DownloadFile (url, filename)
 
+
+type HttpRq =
+
+    static member private EncodePostParams(postparams) =
+        let data = List.fold (fun acc (key: string, value: string) ->
+                              HttpUtility.UrlEncode(key)
+                              + "="
+                              + HttpUtility.UrlEncode(value) +
+                              "&" + acc
+                              )
+                              ""
+                              postparams
+        System.Text.Encoding.UTF8.GetBytes(data)
+
+
+    static member Request(url: string,
+                          ?httpMethod,
+                          ?contentType,
+                          ?headers,
+                          ?userAgent,
+                          ?accept,
+                          ?postParams,
+                          ?postPayload) =
+
+        let headers     = defaultArg headers [||]
+        let contentType = defaultArg contentType "text/html"
+        let httpMethod  = defaultArg httpMethod  "GET"
+        let userAgent   = defaultArg userAgent   "fsharp browser"
+        let accept      = defaultArg accept     "*/*"
+        let postParams  = defaultArg postParams []
+        let postPayload = defaultArg postPayload None
+
+        let req = System.Net.WebRequest.Create url :?> System.Net.HttpWebRequest
+        req.Method      <- httpMethod
+        req.UserAgent   <- userAgent
+        req.ContentType <- contentType
+        req.Accept      <- accept
+
+        if not <| List.isEmpty postParams
+        then ignore <| Http.setPostParams postParams req
+
+        postPayload |> Option.iter (fun p -> Http.setPostPayload p  req
+                                             |> ignore
+                                    )
+
+        req
+
+    /// Read response content as string
+    static member ReadResponse (req: System.Net.HttpWebRequest) =
+        let resp = req.GetResponse() :?> System.Net.HttpWebResponse
+        let respStream = resp.GetResponseStream ()
+        let reader = new System.IO.StreamReader (respStream)
+        let output = reader.ReadToEnd()
+        respStream.Close()
+        reader.Close ()
+        output
+
+    /// Simple http request returning string as response.
+    ///
+    static member RequestSimple(url: string) =
+        let client = new System.Net.WebClient()
+        client.DownloadString(url)
+
+    static member Download (url: string) filename =
+        let client = new System.Net.WebClient ()
+        client.DownloadFile (url, filename)
