@@ -73,7 +73,7 @@ module Date =
     /// </summary>
     ///
     let dateFixDay y d =
-        fun m -> date y m d 
+        fun m -> date y m d
 
     let lengthOfMonth y m =
         DateTime.DaysInMonth(y, m)
@@ -117,6 +117,10 @@ module Date =
     /// Format date to ISO 8601 format (yyyy-mm-dd).
     let toString (d: T) =
         d.ToString("yyyy-MM-dd")
+
+    /// Format date 
+    let format (fmt: string) (d: T) =
+        d.ToString(fmt)
 
     let dayOfWeek (d: DateTime) =
         d.DayOfWeek
@@ -203,7 +207,9 @@ module Date =
         x.TotalSeconds
 
     let fromUnixTimestamp tstamp =
-        unixZeroDate.AddSeconds(tstamp)
+        let d = unixZeroDate.AddSeconds(tstamp)
+        d.ToLocalTime()
+        
 
 module DateYMD =
     open System
