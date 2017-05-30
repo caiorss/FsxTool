@@ -67,7 +67,7 @@ module HttpUtils =
 
 
 
-type HttpRq =
+type Httpr =
 
     static member Request(url: string,
                           ?httpMethod,
