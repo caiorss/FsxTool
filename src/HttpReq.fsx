@@ -101,6 +101,11 @@ type HttpRq =
 
         req
 
+
+    static member GetResponse (req: System.Net.HttpWebRequest) =
+        let resp = req.GetResponse() :?> HttpWebResponse
+        resp
+
     /// Read response content as string
     static member ReadResponse (req: System.Net.HttpWebRequest) =
         let resp = req.GetResponse() :?> System.Net.HttpWebResponse
