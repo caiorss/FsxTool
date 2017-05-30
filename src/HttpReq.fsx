@@ -70,10 +70,10 @@ module HttpUtils =
 type Httpr =
 
     static member Request(url: string,
-                          ?httpMethod,
+                          ?httpMethod,   // Http Method - GET, POST, HEAD
                           ?contentType,
-                          ?headers,
-                          ?userAgent,
+                          ?headers,      // Http Headers
+                          ?userAgent,    // Browser User Agent
                           ?accept,
                           ?postParams,
                           ?postPayload) =
