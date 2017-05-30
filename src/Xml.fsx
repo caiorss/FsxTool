@@ -94,7 +94,8 @@ module Node =
 
     /// Find child node that has a given tag
     let findNodeTag tag (node: T) =
-        findNode (fun node -> node.Name = tag) node
+        node |> childNodes
+             |> Seq.tryFind (fun node -> node.Name = tag)
 
     /// Find child node that has a given tag (Not safe)
     let findNodeTag2 tag (node: T) =
