@@ -118,6 +118,14 @@ type Httpr =
                       ,postPayload = Some json
                       )
 
+    /// Post request with a Form payload.
+    static member PostForm (url: string, formParams) =
+        Httpr.Request(url
+                      ,httpMethod = "POST"
+                      ,contentType = "application/x-www-form-urlencoded"
+                      ,postParams = formParams
+                      )
+
 
     static member GetResponse (req: System.Net.HttpWebRequest) =
         let resp = req.GetResponse() :?> HttpWebResponse
