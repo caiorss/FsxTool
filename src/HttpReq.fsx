@@ -11,7 +11,7 @@ open System.Web
 module HttpUtils =
 
     /// Add query parameters to URL
-    let addParams (url: string) queryParams =
+    let addQueryParams (url: string) queryParams =
         let uribuilder = new UriBuilder(url)
         let query = HttpUtility.ParseQueryString(uribuilder.Query)
         queryParams |> List.iter (fun (k, v) -> query.Add(k, v))
