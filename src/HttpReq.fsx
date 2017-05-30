@@ -69,18 +69,6 @@ module HttpUtils =
 
 type HttpRq =
 
-    static member private EncodePostParams(postparams) =
-        let data = List.fold (fun acc (key: string, value: string) ->
-                              HttpUtility.UrlEncode(key)
-                              + "="
-                              + HttpUtility.UrlEncode(value) +
-                              "&" + acc
-                              )
-                              ""
-                              postparams
-        System.Text.Encoding.UTF8.GetBytes(data)
-
-
     static member Request(url: string,
                           ?httpMethod,
                           ?contentType,
