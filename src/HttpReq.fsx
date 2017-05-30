@@ -46,6 +46,12 @@ module HttpUtils =
         dataStream.Close ()    
         req
 
+    let addBasicAuthHeaders (login, password) (req: HttpWebRequest) =
+        let isoEncode = System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(login + ":" + password)
+        let encoded = System.Convert.ToBase64String(isoEncode)
+        req.Headers.Add("Authorization", "Basic " + encoded)
+        req 
+
     let setHeaders headers (req: HttpWebRequest) =
         List.iter (fun (k: string, v: string) -> req.Headers.[k] <- v)
                   headers
@@ -69,15 +75,17 @@ module HttpUtils =
 
 type Httpr =
 
-    static member Request(url: string,
-                          ?query,
-                          ?httpMethod,   // Http Method - GET, POST, HEAD
-                          ?contentType,
-                          ?headers,      // Http Headers
-                          ?userAgent,    // Browser User Agent
-                          ?accept,
-                          ?postParams,
-                          ?postPayload) =
+    static member Request(url: string
+                         ,?query
+                         ,?httpMethod   // Http Method - GET, POST, HEAD
+                         ,?contentType
+                         ,?headers      // Http Headers
+                         ,?userAgent    // Browser User Agent
+                         ,?accept
+                         ,?postParams
+                         ,?postPayload
+                         ,?basicAuth     // Basic Authentication with login and password
+                          ) =
 
         let query       = defaultArg query   []
         let headers     = defaultArg headers [||]
@@ -87,6 +95,7 @@ type Httpr =
         let accept      = defaultArg accept     "*/*"
         let postParams  = defaultArg postParams []
         let postPayload = defaultArg postPayload None
+        let basicAuth   = defaultArg basicAuth   None 
 
         let urlP = if not <| List.isEmpty query
                    then HttpUtils.addQueryParams url query
@@ -108,7 +117,12 @@ type Httpr =
                                              |> ignore
                                     )
 
+        match basicAuth with
+        | None               -> ()
+        | Some (login, pass) -> ignore <| HttpUtils.addBasicAuthHeaders (login, pass) req 
+
         req
+
 
     /// Post request with Json payload.
     static member PostJson (url: string, json) =
